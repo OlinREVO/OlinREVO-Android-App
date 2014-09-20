@@ -1,4 +1,4 @@
-package com.revo.display;
+package com.revo.display.views.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -14,7 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.revo.display.R;
 import com.revo.display.util.SystemUiHider;
+import com.revo.display.views.fragment.DriverFragment;
 
 
 /**
