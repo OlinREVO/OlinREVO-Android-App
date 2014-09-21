@@ -2,6 +2,7 @@ package com.revo.display.views.activity;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -25,11 +26,17 @@ import com.revo.display.views.fragment.SpectatorFragment;
  */
 public class MainActivity extends Activity {
 
+    // Fragment Management
     FragmentManager fragmentManager;
     String currentFragment;
+
+    //Drawer Management
     private String[] sectionTitles = new String[]{"Driver", "Spectator", "Developer"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+
+    //Bluetooth Management
+    public final int REQUEST_ENABLE_BT = 1337;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +110,13 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_ENABLE_BT) {
+            Log.i("Bluetooh Enabled", "Returned to Activity");
         }
     }
 }
