@@ -1,5 +1,11 @@
 <resources>
 
+    <!-- General App Navigation -->
+    <color name="drawer_background">#ff212121</color>
+    <color name="drawer_text_color">#ffffff</color>
     <color name="black_overlay">#66000000</color>
+
+    <!-- Speedometer -->
+    <color name="speedometer_on">#ff009600</color>
 
 </resources>

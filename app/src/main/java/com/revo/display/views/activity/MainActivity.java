@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 
 import com.revo.display.R;
 import com.revo.display.views.fragment.DriverFragment;
+import com.revo.display.views.fragment.RevoFragment;
 
 
 /**
@@ -23,13 +25,18 @@ import com.revo.display.views.fragment.DriverFragment;
  */
 public class MainActivity extends Activity {
 
+    FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_main);
+
+        fragmentManager = getFragmentManager();
         setupDrawer();
     }
 
@@ -46,6 +53,8 @@ public class MainActivity extends Activity {
                 R.layout.drawer_list_item, sectionTitles));
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        showFragment(new DriverFragment());
     }
 
     private class DrawerItemClickListener implements AdapterView.OnItemClickListener {
@@ -69,5 +78,18 @@ public class MainActivity extends Activity {
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    public void showFragment(RevoFragment fragment) {
+        //Check to see if previously rendered fragment is still alive
+        Log.i("MainActivity", "Showing fragment: " + fragment.tag());
+        Fragment old = fragmentManager.findFragmentByTag(fragment.tag());
+        if (old == null) {
+            Log.i("DebugDebug", "Here");
+            getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+            return;
+        }
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, old).commit();
+        old.onResume();
     }
 }

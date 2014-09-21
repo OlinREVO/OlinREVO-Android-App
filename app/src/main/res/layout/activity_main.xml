@@ -4,7 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="#ff212121"
     tools:context=".MainActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
-        android:textColor="#33b5e5"
+        android:textColor="#ff373737"
         android:textStyle="bold"
         android:textSize="50sp"
         android:gravity="center"
@@ -37,9 +37,8 @@
               android:layout_height="match_parent"
               android:layout_gravity="start"
               android:choiceMode="singleChoice"
-              android:layout_marginTop="100dp"
-              android:divider="@android:color/transparent"
-              android:dividerHeight="0dp"
-              android:background="#111"/>
+              android:divider="@android:color/white"
+              android:dividerHeight="1dp"
+              android:background="@color/drawer_background"/>
 
 </android.support.v4.widget.DrawerLayout>

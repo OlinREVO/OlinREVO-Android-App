@@ -16,7 +16,7 @@ import com.revo.display.R;
 
 public class Speedometer extends View implements SpeedChangeListener {
 	private static final String TAG = Speedometer.class.getSimpleName();
-	public static final float DEFAULT_MAX_SPEED = 300; // Assuming this is km/h and you drive a super-car
+	public static final float DEFAULT_MAX_SPEED = 100; // Assuming this is km/h and you drive a super-car
 
     // Speedometer internal state
 	private float mMaxSpeed;
@@ -32,11 +32,12 @@ public class Speedometer extends View implements SpeedChangeListener {
 	final RectF oval = new RectF();
 	
 	// Drawing colors
+    private final float SPEED_TEXT_SIZE = 150f;
 	private int ON_COLOR = Color.argb(255, 0xff, 0xA5, 0x00);
 	private int OFF_COLOR = Color.argb(255,0x3e,0x3e,0x3e);
 	private int SCALE_COLOR = Color.argb(255, 255, 255, 255);
-	private float SCALE_SIZE = 14f;
-	private float READING_SIZE = 60f;
+	private float SCALE_SIZE = 40f;
+	private float READING_SIZE = 80f;
 	
 	// Scale configuration
 	private float centerX;
@@ -90,7 +91,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 		readingPaint = new Paint(scalePaint);
 		readingPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 		offMarkPaint.setShadowLayer(3f, 0f, 0f, Color.WHITE);
-		readingPaint.setTextSize(65f);
+		readingPaint.setTextSize(SPEED_TEXT_SIZE);
 		readingPaint.setTypeface(Typeface.SANS_SERIF);
 		readingPaint.setColor(Color.WHITE);
 		
@@ -173,7 +174,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	 * @param canvas
 	 */
 	private void drawScaleBackground(Canvas canvas){
-		canvas.drawARGB(255, 0, 0, 0);
+		canvas.drawARGB(0, 0, 0, 0);
 		Log.d(TAG,"drawScaleBackground");
 		offPath.reset();
 		for(int i = -180; i < 0; i+=4){
@@ -185,7 +186,7 @@ public class Speedometer extends View implements SpeedChangeListener {
 	private void drawScale(Canvas canvas){
 		onPath.reset();
 		for(int i = -180; i < (mCurrentSpeed/mMaxSpeed)*180 - 180; i+=4){
-			onPath.addArc(oval, i, 2f);
+			onPath.addArc(oval, i, 10f);
 		}
 		canvas.drawPath(onPath, onMarkPaint);
 	}
