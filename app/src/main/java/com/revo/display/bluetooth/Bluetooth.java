@@ -1,15 +1,13 @@
 package com.revo.display.bluetooth;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-
-import com.revo.display.views.activity.MainActivity;
 
 import java.util.Set;
 
@@ -17,43 +15,43 @@ import java.util.Set;
  * Created by sihrc on 9/20/14.
  */
 public class Bluetooth {
+    final static public int REQUEST_ENABLE_BT = 0;
     BluetoothAdapter mBluetoothAdapter;
-    MainActivity activity;
+    BTConnect connect;
+    Context context;
+    final BroadcastReceiver mReceiver;
 
-    public Bluetooth(MainActivity activity) {
-        this.activity = activity;
+    public Bluetooth(Context context, final DataWatcher dataWatcher) {
+        // Create a BroadcastReceiver for ACTION_FOUND
+        mReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                // When discovery finds a device
+                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+                    // Get the BluetoothDevice object from the Intent
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    // Add the name and address to an array adapter to show in a ListView
+                    Log.i("Bluetooth Discovered Device!", device.getName() + '\n' + device.getAddress());
+
+                    connect = new BTConnect(device, mBluetoothAdapter, dataWatcher);
+                }
+            }
+        };
+        this.context = context;
         registerBTReceiver();
-        initializeBTAdapter();
     }
 
-    // Create a BroadcastReceiver for ACTION_FOUND
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            // When discovery finds a device
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // Add the name and address to an array adapter to show in a ListView
-                Log.i("Bluetooth Discovered Device!", device.getName() + '\n' + device.getAddress());
+    /**
+     * Nuts and Bolts for Getting a Bluetooth Connection
+     */
 
-                BTConnect connect = new BTConnect(device, mBluetoothAdapter, new SocketCallback() {
-                    @Override
-                    public void receivedSocket(BluetoothSocket socket) {
-                        Log.i("Bluetooth Socket", "I found a socket");
-                    }
-                });
-            }
-        }
-    };
-
-    public void startDiscovery() {
+    private void startDiscovery() {
         //Start Bluetooth Discovery
         mBluetoothAdapter.startDiscovery();
     }
 
     /** Initializing Bluetooth **/
-    private void initializeBTAdapter() {
+    public void initializeBTAdapter(Activity activity) {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             // Device does not support Bluetooth
@@ -62,7 +60,7 @@ public class Bluetooth {
 
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            activity.startActivityForResult(enableBtIntent, activity.REQUEST_ENABLE_BT);
+            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
@@ -74,11 +72,13 @@ public class Bluetooth {
                 Log.i("Bluetooth Found Device!", device.getName() + '\n' + device.getAddress());
             }
         }
+
+        startDiscovery();
     }
 
     private void registerBTReceiver() {
         // Register the BroadcastReceiver
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        activity.registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+        context.registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
     }
 }

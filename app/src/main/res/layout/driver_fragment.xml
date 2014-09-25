@@ -6,18 +6,30 @@
                 android:layout_height="match_parent"
                 android:background="@color/black_overlay">
 
-<View
-    android:id="@+id/driver_center"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_centerInParent="true"/>
+    <View
+        android:id="@+id/driver_center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"/>
+    
+    <com.revo.display.views.custom.Speedometer
+        android:id="@+id/speedometer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/driver_center"
+        custom:currentSpeed="0"
+        custom:maxSpeed="100"
+        custom:onColor="@color/speedometer_on"/>
 
-<com.revo.display.views.custom.Speedometer
-    android:id="@+id/speedometer"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_toLeftOf="@id/driver_center"
-    custom:currentSpeed="0"
-    custom:maxSpeed="100"
-    custom:onColor="@color/speedometer_on"/>
+    <!-- Temp Throttle -->
+    <Button
+        android:id="@+id/throttle"
+        android:padding="10dp"
+        android:text="Go"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/speedometer"
+        android:background="@drawable/round_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>
