@@ -2,7 +2,6 @@ package com.revo.display.views.activity;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -14,8 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.revo.display.R;
-import com.revo.display.RevoApplication;
-import com.revo.display.bluetooth.Bluetooth;
 import com.revo.display.views.fragment.DeveloperFragment;
 import com.revo.display.views.fragment.DriverFragment;
 import com.revo.display.views.fragment.RevoFragment;
@@ -45,9 +42,6 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-
-        //Initializing Bluetooth
-        RevoApplication.app.getBluetoothConnection().initializeBTAdapter(MainActivity.this);
 
         //Initializing Navigation Management
         fragmentManager = getFragmentManager();
@@ -115,13 +109,6 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Bluetooth.REQUEST_ENABLE_BT) {
-            Log.i("Bluetooth Enabled", "Returned to Activity");
         }
     }
 }
