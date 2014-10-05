@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
-import com.revo.display.network.FirebaseHelper;
-import com.revo.display.views.custom.Speedometer;
+import com.revo.display.network.RFirebase;
+import com.revo.display.views.custom.RSpeedometer;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,12 +20,12 @@ import java.util.TimerTask;
  * Created by sihrc on 9/20/14.
  */
 public class DriverFragment extends RevoFragment {
-    FirebaseHelper firebaseHelper = RevoApplication.app.getFireBaseHelper();
+    RFirebase RFirebase = RevoApplication.app.getFireBaseHelper();
 
     //Parameters for fake throttle
     int currentSpeed;
     boolean accelerating;
-    Speedometer speedometer;
+    RSpeedometer RSpeedometer;
 
     //For updating the speedometer
     Timer timer;
@@ -34,7 +34,7 @@ public class DriverFragment extends RevoFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
 
-        speedometer = (Speedometer) rootView.findViewById(R.id.speedometer);
+        RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
 
         timer = new Timer();
         task = new TimerTask() {
@@ -56,7 +56,7 @@ public class DriverFragment extends RevoFragment {
 
                     @Override
                     protected void onPostExecute(Void aVoid) {
-                        speedometer.onSpeedChanged(currentSpeed);
+                        RSpeedometer.onSpeedChanged(currentSpeed);
                     }
                 }.execute();
             }

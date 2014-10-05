@@ -23,7 +23,7 @@ import com.revo.display.views.fragment.SpectatorFragment;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends Activity {
+public class RevoActivity extends Activity {
 
     // Fragment Management
     FragmentManager fragmentManager;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.revo_activity);
 
         //Initializing Navigation Management
         fragmentManager = getFragmentManager();

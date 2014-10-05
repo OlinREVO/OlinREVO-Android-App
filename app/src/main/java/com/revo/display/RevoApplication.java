@@ -2,14 +2,19 @@ package com.revo.display;
 
 import android.app.Application;
 
-import com.revo.display.network.FirebaseHelper;
+import com.revo.display.network.RFirebase;
 
 /**
  * Created by sihrc on 9/24/14.
  */
 public class RevoApplication extends Application {
     public static RevoApplication app;
-    FirebaseHelper fb;
+    RFirebase fb;
+
+    // Request Code for Bluetooth
+    final public static int REQUEST_ENABLE_BT = 100;
+    // Timeout for Bluetooth Scanning
+    final public static long SCAN_PERIOD = 10000;
 
     @Override
     public void onCreate() {
@@ -17,11 +22,11 @@ public class RevoApplication extends Application {
 
         //Grab Static Reference
         app = this;
-        fb = new FirebaseHelper(this);
+        fb = new RFirebase(this);
     }
 
 
-    public FirebaseHelper getFireBaseHelper() {
+    public RFirebase getFireBaseHelper() {
         return fb;
     }
 }

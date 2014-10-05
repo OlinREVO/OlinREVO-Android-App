@@ -9,7 +9,7 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="Speedometer">
+    <declare-styleable name="RSpeedometer">
         <attr name="maxSpeed" format="float"></attr>
         <attr name="currentSpeed" format="float"></attr>
         <attr name="onColor" format="color"></attr>

@@ -14,9 +14,9 @@ import android.view.View;
 
 import com.revo.display.R;
 
-public class Speedometer extends View implements SpeedChangeListener {
+public class RSpeedometer extends View implements SpeedChangeListener {
     public static final float DEFAULT_MAX_SPEED = 100; // Assuming this is km/h and you drive a super-car
-    private static final String TAG = Speedometer.class.getSimpleName();
+    private static final String TAG = RSpeedometer.class.getSimpleName();
     final RectF oval = new RectF();
     // Drawing colors
     private final float SPEED_TEXT_SIZE = 150f;
@@ -41,25 +41,25 @@ public class Speedometer extends View implements SpeedChangeListener {
     private float centerY;
     private float radius;
 
-    public Speedometer(Context context) {
+    public RSpeedometer(Context context) {
         super(context);
         Log.d(TAG, "Speedometer(Context) called");
     }
 
-    public Speedometer(Context context, AttributeSet attrs) {
+    public RSpeedometer(Context context, AttributeSet attrs) {
         super(context, attrs);
         Log.d(TAG, "Speedometer(Context, AttributeSet) called");
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.Speedometer,
+                R.styleable.RSpeedometer,
                 0, 0);
         try {
-            mMaxSpeed = a.getFloat(R.styleable.Speedometer_maxSpeed, DEFAULT_MAX_SPEED);
-            mCurrentSpeed = a.getFloat(R.styleable.Speedometer_currentSpeed, 0);
-            ON_COLOR = a.getColor(R.styleable.Speedometer_onColor, ON_COLOR);
-            OFF_COLOR = a.getColor(R.styleable.Speedometer_offColor, OFF_COLOR);
-            SCALE_COLOR = a.getColor(R.styleable.Speedometer_scaleColor, SCALE_COLOR);
-            SCALE_SIZE = a.getDimension(R.styleable.Speedometer_scaleTextSize, SCALE_SIZE);
-            READING_SIZE = a.getDimension(R.styleable.Speedometer_readingTextSize, READING_SIZE);
+            mMaxSpeed = a.getFloat(R.styleable.RSpeedometer_maxSpeed, DEFAULT_MAX_SPEED);
+            mCurrentSpeed = a.getFloat(R.styleable.RSpeedometer_currentSpeed, 0);
+            ON_COLOR = a.getColor(R.styleable.RSpeedometer_onColor, ON_COLOR);
+            OFF_COLOR = a.getColor(R.styleable.RSpeedometer_offColor, OFF_COLOR);
+            SCALE_COLOR = a.getColor(R.styleable.RSpeedometer_scaleColor, SCALE_COLOR);
+            SCALE_SIZE = a.getDimension(R.styleable.RSpeedometer_scaleTextSize, SCALE_SIZE);
+            READING_SIZE = a.getDimension(R.styleable.RSpeedometer_readingTextSize, READING_SIZE);
         } finally {
             a.recycle();
         }
