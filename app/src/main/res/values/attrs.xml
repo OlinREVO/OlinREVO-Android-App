@@ -19,4 +19,14 @@
         <attr name="readingTextSize" format="dimension"></attr>
     </declare-styleable>
 
+    <declare-styleable name="RBatteryMeter">
+        <attr name="maxCharge" format="float"></attr>
+        <attr name="currentCharge" format="float"></attr>
+        <attr name="batteryOnColor" format="color"></attr>
+        <attr name="batteryOffColor" format="color"></attr>
+        <attr name="batteryScaleColor" format="color"></attr>
+        <attr name="batteryScaleTextSize" format="dimension"></attr>
+        <attr name="batteryReadingTextSize" format="dimension"></attr>
+    </declare-styleable>
+
 </resources>

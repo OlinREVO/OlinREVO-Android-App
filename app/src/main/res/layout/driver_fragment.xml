@@ -17,9 +17,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/driver_center"
-        custom:currentSpeed="0"
-        custom:maxSpeed="100"
-        custom:onColor="@color/speedometer_on"/>
+        custom:currentSpeed="50"
+        custom:maxSpeed="100" />
+        <!--custom:onColor="@color/speedometer_on" />-->
+
+    <com.revo.display.views.custom.RBatteryMeter
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/batterymeter"
+        android:layout_toRightOf="@id/driver_center"
+        custom:currentCharge="60"
+        custom:maxCharge="100" />
+        <!--custom:onColor="@color/batterymeter_on" />-->
 
     <!-- Temp Throttle -->
     <Button
@@ -28,7 +37,7 @@
         android:text="Go"
         android:textSize="16sp"
         android:textColor="@android:color/white"
-        android:layout_below="@id/speedometer"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/round_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

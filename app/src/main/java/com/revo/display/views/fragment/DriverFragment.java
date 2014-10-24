@@ -12,6 +12,7 @@ import com.revo.display.R;
 import com.revo.display.RevoApplication;
 import com.revo.display.network.RFirebase;
 import com.revo.display.views.custom.RSpeedometer;
+import com.revo.display.views.custom.RBatteryMeter;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,8 +25,10 @@ public class DriverFragment extends RevoFragment {
 
     //Parameters for fake throttle
     int currentSpeed;
+    int currentCharge;
     boolean accelerating;
     RSpeedometer RSpeedometer;
+    RBatteryMeter RBatteryMeter;
 
     //For updating the speedometer
     Timer timer;
@@ -35,6 +38,7 @@ public class DriverFragment extends RevoFragment {
         View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
 
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
+        RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
 
         timer = new Timer();
         task = new TimerTask() {
@@ -46,9 +50,11 @@ public class DriverFragment extends RevoFragment {
                         Log.i("DebugDebug", "Looping");
                         if (!accelerating) {
                             currentSpeed = currentSpeed > 0 ? currentSpeed - 2 : 0;
+                            currentCharge = currentCharge > 0 ? currentCharge - 2 : 0;
                             Log.i("fake_throttle", "accelerating " + currentSpeed);
                         } else {
                             currentSpeed = currentSpeed < 100 ? (currentSpeed + (100 - currentSpeed)/10) : 100;
+                            currentCharge = currentCharge < 100 ? (currentCharge + (100 - currentCharge)/10) : 100;
                             Log.i("fake_throttle", "accelerating " + currentSpeed);
                         }
                         return null;
@@ -57,6 +63,7 @@ public class DriverFragment extends RevoFragment {
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         RSpeedometer.onSpeedChanged(currentSpeed);
+                        RBatteryMeter.onChargeChanged(currentCharge);
                     }
                 }.execute();
             }
