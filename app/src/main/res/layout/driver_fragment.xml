@@ -12,9 +12,16 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true"/>
     
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/image"
+        android:src="@drawable/empty_battery"
+        android:layout_toRightOf="@id/driver_center"/>
+
     <com.revo.display.views.custom.RSpeedometer
         android:id="@+id/speedometer"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/driver_center"
         custom:currentSpeed="50"
@@ -25,9 +32,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/batterymeter"
-        android:layout_toRightOf="@id/driver_center"
+        android:layout_alignLeft="@id/image"
         custom:currentCharge="60"
-        custom:maxCharge="100" />
+        custom:maxCharge="100"/>
         <!--custom:onColor="@color/batterymeter_on" />-->
 
     <!-- Temp Throttle -->
@@ -41,4 +48,5 @@
         android:background="@drawable/round_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+    
 </RelativeLayout>

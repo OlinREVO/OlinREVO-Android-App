@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
@@ -35,10 +36,21 @@ public class DriverFragment extends RevoFragment {
     TimerTask task;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
-
+        final View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
         RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
+
+        rootView.findViewById(R.id.image).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                rootView.findViewById(R.id.image).getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
+                RBatteryMeter.setRectDimensions((int)rootView.findViewById(R.id.image).getY(),
+                                                (int)rootView.findViewById(R.id.image).getY()+rootView.findViewById(R.id.image).getHeight(),
+                                                (int)rootView.findViewById(R.id.image).getX()+rootView.findViewById(R.id.image).getWidth(),
+                                                (int)rootView.findViewById(R.id.image).getX());
+            }
+        });
 
         timer = new Timer();
         task = new TimerTask() {
@@ -81,6 +93,8 @@ public class DriverFragment extends RevoFragment {
                 return false;
             }
         });
+
+
 
         return rootView;
     }
