@@ -83,7 +83,6 @@ public class DriverFragment extends RevoFragment {
                     new AsyncTask<Void, Integer, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
-                            Log.i("DebugDebug", "Looping");
                             if (!accelerating) {
                                 currentSpeed = currentSpeed > 0 ? currentSpeed - 2 : 0;
                                 currentCharge = currentCharge > 0 ? currentCharge - 2 : 0;

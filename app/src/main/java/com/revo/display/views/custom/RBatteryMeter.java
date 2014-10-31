@@ -21,9 +21,7 @@ import com.revo.display.R;
 public class RBatteryMeter extends View implements BatteryChangeListener{
     public static final float DEFAULT_MAX_CHARGE = 100;
     private final float CHARGE_TEXT_SIZE = 150f;
-    private static final String TAG = RBatteryMeter.class.getSimpleName();
     private float centerX, centerY;
-    private int fill;
     private Rect rect;
     private int ON_COLOR = Color.argb(255, 0xff, 0xA5, 0x00);
     private int OFF_COLOR = Color.argb(255, 0x3e, 0x3e, 0x3e);
@@ -90,8 +88,8 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
 
     @Override
     public void onDraw(Canvas canvas) {
-        drawBar(canvas);
         drawBattery(canvas);
+        drawBar(canvas);
         drawReading(canvas);
     }
 
@@ -108,7 +106,7 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
 
         int chosenDimension = Math.min(chosenWidth, chosenHeight);
         centerX = chosenDimension / 2;
-        centerY = (chosenDimension)/2 - heightSize/8;
+        centerY = heightSize/2;
         setMeasuredDimension(chosenDimension, chosenDimension);
     }
 
@@ -125,10 +123,11 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
     }
 
     private void drawBar(Canvas canvas) {
-        fill = (int)((getBottom()) * (mCurrentCharge/mMaxCharge));
-        Log.d(TAG, "L: " + getLeft() + " R: " + getRight() + " T: " + getTop() + " B: " + getBottom() + " Fill: " + fill);
         rect = canvas.getClipBounds();
-//        rect.height() = ;
+        rect.top = (int) (rect.bottom * (1 - (mCurrentCharge/mMaxCharge)));
+        if (rect.top == rect.bottom) {
+            rect.top += 1;
+        }
         canvas.drawRect(rect, chargePaint);
     }
 
