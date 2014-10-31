@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
@@ -28,8 +29,11 @@ public class DriverFragment extends RevoFragment {
     int currentSpeed;
     int currentCharge;
     boolean accelerating;
+
+    //Views for Display
     RSpeedometer RSpeedometer;
     RBatteryMeter RBatteryMeter;
+    ImageView battery;
 
     //For updating the speedometer
     Timer timer;
@@ -40,23 +44,23 @@ public class DriverFragment extends RevoFragment {
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
         RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
 
-        rootView.findViewById(R.id.image).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                rootView.findViewById(R.id.image).getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
-                RBatteryMeter.setRectDimensions((int) rootView.findViewById(R.id.image).getY(),
-                        (int) rootView.findViewById(R.id.image).getY() + rootView.findViewById(R.id.image).getHeight(),
-                        (int) rootView.findViewById(R.id.image).getX() + rootView.findViewById(R.id.image).getWidth(),
-                        (int) rootView.findViewById(R.id.image).getX());
-            }
-        });
+//        battery = (ImageView) rootView.findViewById(R.id.image);
+//        battery.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//               battery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                RBatteryMeter.setRectDimensions(
+//                        (int) battery.getY(),
+//                        (int) battery.getY() + battery.getHeight(),
+//                        (int) battery.getX() + battery.getWidth(),
+//                        (int) battery.getX());
+//            }
+//        });
 
         rootView.findViewById(R.id.throttle).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.i("DebugDebug", "Hello");
                     accelerating = true;
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     accelerating = false;

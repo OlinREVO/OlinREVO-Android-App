@@ -2,13 +2,15 @@ package com.revo.display.views.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -20,42 +22,27 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
     public static final float DEFAULT_MAX_CHARGE = 100;
     private final float CHARGE_TEXT_SIZE = 150f;
     private static final String TAG = RBatteryMeter.class.getSimpleName();
-    final RectF oval = new RectF();
-    private float centerX;
-    private float centerY;
-    private float radius;
+    private float centerX, centerY;
     private int fill;
     private Rect rect;
-    private int rectBottom;
-    private int rectLeft;
-    private int rectTop;
-    private int rectRight;
     private int ON_COLOR = Color.argb(255, 0xff, 0xA5, 0x00);
     private int OFF_COLOR = Color.argb(255, 0x3e, 0x3e, 0x3e);
     private int SCALE_COLOR = Color.argb(255, 255, 255, 255);
     private float SCALE_SIZE = 35f;
     private float READING_SIZE = 80f;
-    private Paint onMarkPaint;
-    private Paint offMarkPaint;
-    private Paint scalePaint;
     private Paint readingPaint;
     private Paint chargePaint;
-    private Path onPath;
-    private Path offPath;
     private float mMaxCharge;
     private float mCurrentCharge;
-    private View battView;
+
+    Drawable battery;
 
     public RBatteryMeter(Context context) {
         super(context);
-        battView = findViewById(R.id.image);
-        Log.d(TAG, "Battery Meter(Context) called");
     }
 
     public RBatteryMeter(Context context, AttributeSet attrs) {
         super(context, attrs);
-        battView = findViewById(R.id.image);
-        Log.d(TAG, "Battery Meter(Context, AttributeSet) called");
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RBatteryMeter, 0, 0);
         try {
             mMaxCharge = a.getFloat(R.styleable.RBatteryMeter_maxCharge, DEFAULT_MAX_CHARGE);
@@ -72,14 +59,6 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
     }
 
     private void initDrawingTools() {
-
-        onMarkPaint = new Paint();
-        onMarkPaint.setStyle(Paint.Style.STROKE);
-        onMarkPaint.setColor(ON_COLOR);
-        onMarkPaint.setStrokeWidth(35f);
-        onMarkPaint.setShadowLayer(5f, 0f, 0f, ON_COLOR);
-        onMarkPaint.setAntiAlias(true);
-
         chargePaint = new Paint();
         chargePaint.setStyle(Paint.Style.FILL);
         chargePaint.setColor(ON_COLOR);
@@ -87,29 +66,14 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         chargePaint.setShadowLayer(5f, 0f, 0f, ON_COLOR);
         chargePaint.setAntiAlias(true);
 
-        offMarkPaint = new Paint(onMarkPaint);
-        offMarkPaint.setColor(OFF_COLOR);
-        offMarkPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        offMarkPaint.setShadowLayer(0f, 0f, 0f, OFF_COLOR);
-
-        scalePaint = new Paint(offMarkPaint);
-        scalePaint.setStrokeWidth(2f);
-        scalePaint.setTextSize(SCALE_SIZE);
-        scalePaint.setShadowLayer(5f, 0f, 0f, Color.RED);
-        scalePaint.setColor(SCALE_COLOR);
-
-        readingPaint = new Paint(scalePaint);
+        readingPaint = new Paint();
         readingPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        offMarkPaint.setShadowLayer(3f, 0f, 0f, Color.WHITE);
         readingPaint.setTextSize(CHARGE_TEXT_SIZE);
         readingPaint.setTypeface(Typeface.SANS_SERIF);
         readingPaint.setColor(Color.WHITE);
 
-        onPath = new Path();
-        offPath = new Path();
+        battery = getResources().getDrawable(R.drawable.empty_battery);
     }
-
-    public float getCurrentCharge() {return mCurrentCharge;}
 
     public void setCurrentCharge(float mCurrentCharge) {
         if (mCurrentCharge > this.mMaxCharge)
@@ -122,33 +86,17 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
 
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
-        Log.d(TAG, "Size changed to " + width + "x" + height);
-        // Setting up the oval area in which the arc will be drawn
-        if (width > height) {
-            radius = height / 4;
-        } else {
-            radius = width / 4;
-        }
-        oval.set(centerX - radius,
-                centerY - radius,
-                centerX + radius,
-                centerY + radius);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-//        drawScaleBackground(canvas);
-//        drawScale(canvas);
-//        drawLegend(canvas);
         drawBar(canvas);
+        drawBattery(canvas);
         drawReading(canvas);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//		Log.d(TAG, "Width spec: " + MeasureSpec.toString(widthMeasureSpec));
-//		Log.d(TAG, "Height spec: " + MeasureSpec.toString(heightMeasureSpec));
-
         int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
 
@@ -160,11 +108,11 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
 
         int chosenDimension = Math.min(chosenWidth, chosenHeight);
         centerX = chosenDimension / 2;
-        centerY = chosenDimension / 2;
+        centerY = (chosenDimension)/2 - heightSize/8;
         setMeasuredDimension(chosenDimension, chosenDimension);
     }
 
-    private int chooseDimension(int mode, int size) {
+    private static int chooseDimension(int mode, int size) {
         if (mode == View.MeasureSpec.AT_MOST || mode == View.MeasureSpec.EXACTLY) {
             return size;
         } else { // (mode == MeasureSpec.UNSPECIFIED)
@@ -172,47 +120,21 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         }
     }
 
-    private int getPreferredSize() {
+    private static int getPreferredSize() {
         return 300;
     }
 
     private void drawBar(Canvas canvas) {
-        fill = (int)((rectBottom) * (mCurrentCharge/mMaxCharge));
-        Log.d(TAG, "L: " + rectLeft + " R: " + rectRight + " T: " + rectTop + " B: " + rectBottom + " Fill: " + fill);
-        rect = new Rect(rectLeft+30, rectLeft+110, rectLeft+30 + (fill - 31), rectRight-110);
+        fill = (int)((getBottom()) * (mCurrentCharge/mMaxCharge));
+        Log.d(TAG, "L: " + getLeft() + " R: " + getRight() + " T: " + getTop() + " B: " + getBottom() + " Fill: " + fill);
+        rect = canvas.getClipBounds();
+//        rect.height() = ;
         canvas.drawRect(rect, chargePaint);
     }
 
-    private void drawScaleBackground(Canvas canvas) {
-        canvas.drawARGB(0, 0, 0, 0);
-        Log.d(TAG, "drawScaleBackground");
-        offPath.reset();
-        for (int i = -180; i < 0; i += 4) {
-            offPath.addArc(oval, i, 2f);
-        }
-        canvas.drawPath(offPath, offMarkPaint);
-    }
-
-    private void drawScale(Canvas canvas) {
-        onPath.reset();
-        for (int i = -180; i < (mCurrentCharge / mMaxCharge) * 180 - 180; i += 4) {
-            onPath.addArc(oval, i, 10f);
-        }
-        canvas.drawPath(onPath, onMarkPaint);
-    }
-
-    private void drawLegend(Canvas canvas) {
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
-        canvas.rotate(-180, centerX, centerY);
-        Path circle = new Path();
-        double halfCircumference = radius * Math.PI;
-        double increments = 20;
-        for (int i = 0; i < this.mMaxCharge; i += increments) {
-            circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
-            canvas.drawTextOnPath(String.format("%d", i), circle, (float) (i * halfCircumference / this.mMaxCharge), -30f, scalePaint);
-        }
-
-        canvas.restore();
+    private void drawBattery(Canvas canvas) {
+        battery.setBounds(canvas.getClipBounds());
+        battery.draw(canvas);
     }
 
     private void drawReading(Canvas canvas) {
@@ -223,7 +145,6 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         float advance = 0;
         for (double width : widths)
             advance += width;
-        //Log.d(TAG,"advance: "+advance);
         path.moveTo(centerX - advance / 2, centerY);
         path.lineTo(centerX + advance / 2, centerY);
         canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
@@ -234,12 +155,5 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         this.setCurrentCharge(newChargeValue);
         chargePaint.setColor(Color.argb(140, 255 - (int)((mCurrentCharge/mMaxCharge)*255), (int)((mCurrentCharge/mMaxCharge)*255), 0));
         this.invalidate();
-    }
-
-    public void setRectDimensions(int left, int right, int top, int bot) {
-        rectBottom = bot;
-        rectTop = top;
-        rectLeft = left;
-        rectRight = right;
     }
 }
