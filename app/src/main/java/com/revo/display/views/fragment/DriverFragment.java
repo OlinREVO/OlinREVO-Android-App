@@ -33,7 +33,7 @@ public class DriverFragment extends RevoFragment {
 
     //For updating the speedometer
     Timer timer;
-    TimerTask task;
+    boolean timerRunning;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
@@ -45,41 +45,12 @@ public class DriverFragment extends RevoFragment {
             public void onGlobalLayout() {
                 rootView.findViewById(R.id.image).getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
-                RBatteryMeter.setRectDimensions((int)rootView.findViewById(R.id.image).getY(),
-                                                (int)rootView.findViewById(R.id.image).getY()+rootView.findViewById(R.id.image).getHeight(),
-                                                (int)rootView.findViewById(R.id.image).getX()+rootView.findViewById(R.id.image).getWidth(),
-                                                (int)rootView.findViewById(R.id.image).getX());
+                RBatteryMeter.setRectDimensions((int) rootView.findViewById(R.id.image).getY(),
+                        (int) rootView.findViewById(R.id.image).getY() + rootView.findViewById(R.id.image).getHeight(),
+                        (int) rootView.findViewById(R.id.image).getX() + rootView.findViewById(R.id.image).getWidth(),
+                        (int) rootView.findViewById(R.id.image).getX());
             }
         });
-
-        timer = new Timer();
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                new AsyncTask<Void, Integer, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        Log.i("DebugDebug", "Looping");
-                        if (!accelerating) {
-                            currentSpeed = currentSpeed > 0 ? currentSpeed - 2 : 0;
-                            currentCharge = currentCharge > 0 ? currentCharge - 2 : 0;
-                            Log.i("fake_throttle", "accelerating " + currentSpeed);
-                        } else {
-                            currentSpeed = currentSpeed < 100 ? (currentSpeed + (100 - currentSpeed)/10) : 100;
-                            currentCharge = currentCharge < 100 ? (currentCharge + (100 - currentCharge)/10) : 100;
-                            Log.i("fake_throttle", "accelerating " + currentSpeed);
-                        }
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        RSpeedometer.onSpeedChanged(currentSpeed);
-                        RBatteryMeter.onChargeChanged(currentCharge);
-                    }
-                }.execute();
-            }
-        };
 
         rootView.findViewById(R.id.throttle).setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -99,10 +70,45 @@ public class DriverFragment extends RevoFragment {
         return rootView;
     }
 
+    private void startRunning() {
+        if (!timerRunning) {
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    new AsyncTask<Void, Integer, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            Log.i("DebugDebug", "Looping");
+                            if (!accelerating) {
+                                currentSpeed = currentSpeed > 0 ? currentSpeed - 2 : 0;
+                                currentCharge = currentCharge > 0 ? currentCharge - 2 : 0;
+                                Log.i("fake_throttle", "accelerating " + currentSpeed);
+                            } else {
+                                currentSpeed = currentSpeed < 100 ? (currentSpeed + (100 - currentSpeed)/10) : 100;
+                                currentCharge = currentCharge < 100 ? (currentCharge + (100 - currentCharge)/10) : 100;
+                                Log.i("fake_throttle", "accelerating " + currentSpeed);
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            RSpeedometer.onSpeedChanged(currentSpeed);
+                            RBatteryMeter.onChargeChanged(currentCharge);
+                        }
+                    }.execute();
+                }
+            }, 0, 250);
+            timerRunning = true;
+        }
+    }
+
     @Override
     public void onPause() {
         super.onPause();
-        if (timer != null) {
+        if (timerRunning && timer != null) {
+            timerRunning = false;
             timer.cancel();
         }
     }
@@ -110,9 +116,7 @@ public class DriverFragment extends RevoFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (timer != null && task != null) {
-            timer.schedule(task, 0, 250);
-        }
+        startRunning();
     }
 
     @Override
