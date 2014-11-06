@@ -99,6 +99,8 @@ public class DriverFragment extends RevoFragment {
                         protected void onPostExecute(Void aVoid) {
                             RSpeedometer.onSpeedChanged(currentSpeed);
                             RBatteryMeter.onChargeChanged(currentCharge);
+                            RFirebase.write("Charge", "" + currentCharge);
+                            RFirebase.write("Speed", "" + currentSpeed);
                         }
                     }.execute();
                 }
