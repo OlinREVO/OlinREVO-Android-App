@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black_overlay">
@@ -15,5 +16,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Spectator Fragment"/>
+
+    <com.revo.display.views.custom.RBatteryMeter
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/batterymeter"
+        android:layout_alignParentRight="true"
+        custom:currentCharge="60"
+        custom:maxCharge="100"/>
 
 </RelativeLayout>

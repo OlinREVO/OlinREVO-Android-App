@@ -44,19 +44,6 @@ public class DriverFragment extends RevoFragment {
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
         RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
 
-//        battery = (ImageView) rootView.findViewById(R.id.image);
-//        battery.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//               battery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                RBatteryMeter.setRectDimensions(
-//                        (int) battery.getY(),
-//                        (int) battery.getY() + battery.getHeight(),
-//                        (int) battery.getX() + battery.getWidth(),
-//                        (int) battery.getX());
-//            }
-//        });
-
         rootView.findViewById(R.id.throttle).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -68,8 +55,6 @@ public class DriverFragment extends RevoFragment {
                 return false;
             }
         });
-
-
 
         return rootView;
     }
