@@ -33,7 +33,6 @@ public class DriverFragment extends RevoFragment {
     //Views for Display
     RSpeedometer RSpeedometer;
     RBatteryMeter RBatteryMeter;
-    ImageView battery;
 
     //For updating the speedometer
     Timer timer;
@@ -43,19 +42,6 @@ public class DriverFragment extends RevoFragment {
         final View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
         RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
-
-//        battery = (ImageView) rootView.findViewById(R.id.image);
-//        battery.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//               battery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                RBatteryMeter.setRectDimensions(
-//                        (int) battery.getY(),
-//                        (int) battery.getY() + battery.getHeight(),
-//                        (int) battery.getX() + battery.getWidth(),
-//                        (int) battery.getX());
-//            }
-//        });
 
         rootView.findViewById(R.id.throttle).setOnTouchListener(new View.OnTouchListener() {
             @Override
