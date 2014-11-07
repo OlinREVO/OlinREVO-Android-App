@@ -1,6 +1,7 @@
 package com.revo.display.views.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import com.revo.display.bluetooth.Bluetooth;
 import com.revo.display.bluetooth.ChangeListener;
 import com.revo.display.bluetooth.DataWatcher;
 import com.revo.display.network.FirebaseHelper;
+import com.revo.display.sensors.OrientationSensor;
+import com.revo.display.views.custom.Compass;
 import com.revo.display.views.custom.Speedometer;
 
 /**
@@ -20,8 +23,7 @@ public class DriverFragment extends RevoFragment {
     FirebaseHelper firebaseHelper = RevoApplication.app.getFireBaseHelper();
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.driver_fragment, container);
-
+        View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
         final Speedometer speedometer = (Speedometer) rootView.findViewById(R.id.speedometer);
         return rootView;
     }
