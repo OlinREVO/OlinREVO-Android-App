@@ -22,7 +22,7 @@ public class FirebaseHelper {
         this.firebase = new Firebase(DB_URL);
     }
 
-    public void write(String key, String value) {
+    public <T> void write(String key, T value) {
         firebase.child(key).setValue(value);
     }
 
