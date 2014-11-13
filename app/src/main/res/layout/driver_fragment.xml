@@ -11,31 +11,38 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"/>
-    
-    <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/image"-->
-        <!--android:src="@drawable/empty_battery"-->
-        <!--android:layout_toRightOf="@id/driver_center"/>-->
 
-    <com.revo.display.views.custom.RSpeedometer
-        android:id="@+id/speedometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/driver_center"
-        custom:currentSpeed="50"
-        custom:maxSpeed="100" />
-        <!--custom:onColor="@color/speedometer_on" />-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
 
-    <com.revo.display.views.custom.RBatteryMeter
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/batterymeter"
-        android:layout_alignParentRight="true"
-        custom:currentCharge="60"
-        custom:maxCharge="100"/>
-        <!--custom:onColor="@color/batterymeter_on" />-->
+        <com.revo.display.views.custom.RSpeedometer
+            android:id="@+id/speedometer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            custom:currentSpeed="50"
+            custom:maxSpeed="100"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" />
+
+        <com.revo.display.views.custom.RBatteryMeter
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/batterymeter"
+            custom:currentCharge="60"
+            custom:maxCharge="100"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+
+
 
     <!-- Temp Throttle -->
     <Button
