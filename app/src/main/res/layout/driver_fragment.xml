@@ -29,11 +29,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/driver_center"
-        custom:currentCharge="60"
         custom:maxCharge="100"/>
     <!--custom:onColor="@color/batterymeter_on" />-->
 </RelativeLayout>

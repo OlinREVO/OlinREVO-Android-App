@@ -9,20 +9,18 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.revo.display.R;
 
 public class RSpeedometer extends View implements SpeedChangeListener {
     public static final float DEFAULT_MAX_SPEED = 100; // Assuming this is km/h and you drive a super-car
-    private static final String TAG = RSpeedometer.class.getSimpleName();
     final RectF oval = new RectF();
-    // Drawing colors
-    private final float SPEED_TEXT_SIZE = 200f;
+
     // Speedometer internal state
     private float mMaxSpeed;
     private float mCurrentSpeed;
+
     // Scale drawing tools
     private Paint onMarkPaint;
     private Paint offMarkPaint;
@@ -34,7 +32,6 @@ public class RSpeedometer extends View implements SpeedChangeListener {
     private int OFF_COLOR = Color.argb(255, 0x3e, 0x3e, 0x3e);
     private int SCALE_COLOR = Color.argb(255, 255, 255, 255);
     private float SCALE_SIZE = 60f;
-    private float READING_SIZE = 80f;
 
     // Scale configuration
     private float centerX;
@@ -57,7 +54,6 @@ public class RSpeedometer extends View implements SpeedChangeListener {
             OFF_COLOR = a.getColor(R.styleable.RSpeedometer_offColor, OFF_COLOR);
             SCALE_COLOR = a.getColor(R.styleable.RSpeedometer_scaleColor, SCALE_COLOR);
             SCALE_SIZE = a.getDimension(R.styleable.RSpeedometer_scaleTextSize, SCALE_SIZE);
-            READING_SIZE = a.getDimension(R.styleable.RSpeedometer_readingTextSize, READING_SIZE);
         } finally {
             a.recycle();
         }
@@ -86,21 +82,12 @@ public class RSpeedometer extends View implements SpeedChangeListener {
         readingPaint = new Paint(scalePaint);
         readingPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         offMarkPaint.setShadowLayer(3f, 0f, 0f, Color.WHITE);
-        readingPaint.setTextSize(SPEED_TEXT_SIZE);
+        readingPaint.setTextSize(200f);
         readingPaint.setTypeface(Typeface.SANS_SERIF);
         readingPaint.setColor(Color.WHITE);
 
         onPath = new Path();
         offPath = new Path();
-    }
-
-    public void setCurrentSpeed(float mCurrentSpeed) {
-        if (mCurrentSpeed > this.mMaxSpeed)
-            this.mCurrentSpeed = mMaxSpeed;
-        else if (mCurrentSpeed < 0)
-            this.mCurrentSpeed = 0;
-        else
-            this.mCurrentSpeed = mCurrentSpeed;
     }
 
     @Override
@@ -156,6 +143,20 @@ public class RSpeedometer extends View implements SpeedChangeListener {
         canvas.drawPath(onPath, onMarkPaint);
     }
 
+    private void drawReading(Canvas canvas) {
+        Path path = new Path();
+        String message = String.format("%d", (int) this.mCurrentSpeed);
+        float[] widths = new float[message.length()];
+        readingPaint.getTextWidths(message, widths);
+        float advance = 0;
+        for (double width : widths)
+            advance += width;
+        //Log.d(TAG,"advance: "+advance);
+        path.moveTo(centerX - advance / 2, centerY);
+        path.lineTo(centerX + advance / 2, centerY);
+        canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
+    }
+
     private void drawLegend(Canvas canvas) {
         canvas.save(Canvas.MATRIX_SAVE_FLAG);
         canvas.rotate(-180, centerX, centerY);
@@ -174,23 +175,18 @@ public class RSpeedometer extends View implements SpeedChangeListener {
         canvas.restore();
     }
 
-    private void drawReading(Canvas canvas) {
-        Path path = new Path();
-        String message = String.format("%d", (int) this.mCurrentSpeed);
-        float[] widths = new float[message.length()];
-        readingPaint.getTextWidths(message, widths);
-        float advance = 0;
-        for (double width : widths)
-            advance += width;
-        //Log.d(TAG,"advance: "+advance);
-        path.moveTo(centerX - advance / 2, centerY);
-        path.lineTo(centerX + advance / 2, centerY);
-        canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
-    }
-
     @Override
     public void onSpeedChanged(float newSpeedValue) {
         this.setCurrentSpeed(newSpeedValue);
         this.invalidate();
+    }
+
+    public void setCurrentSpeed(float mCurrentSpeed) {
+        if (mCurrentSpeed > this.mMaxSpeed)
+            this.mCurrentSpeed = mMaxSpeed;
+        else if (mCurrentSpeed < 0)
+            this.mCurrentSpeed = 0;
+        else
+            this.mCurrentSpeed = mCurrentSpeed;
     }
 }
