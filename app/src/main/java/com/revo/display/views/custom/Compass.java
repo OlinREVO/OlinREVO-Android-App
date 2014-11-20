@@ -21,6 +21,7 @@ import com.revo.display.sensors.OrientationSensor;
 public class Compass extends View implements OrientationChangeListener {
     private static final String TAG = Compass.class.getSimpleName();
     private static final double DIRECTION_INCREMENT = 5;
+    private static final float TEXT_SIZE = 75f;
 
     private double direction;
     private Point center;
@@ -86,24 +87,24 @@ public class Compass extends View implements OrientationChangeListener {
     }
 
     public void initDrawingTools() {
-        bgPaint = new Paint();
+        bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         bgPaint.setStyle(Paint.Style.FILL);
         bgPaint.setColor(Color.WHITE);
         bgPaint.setStrokeWidth(35f);
         bgPaint.setAntiAlias(true);
 
-        fgPaint = new Paint();
+        fgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         fgPaint.setStyle(Paint.Style.FILL);
         fgPaint.setColor(Color.BLACK);
         fgPaint.setStrokeWidth(35f);
-        fgPaint.setTextSize(100);
+        fgPaint.setTextSize(TEXT_SIZE);
         fgPaint.setAntiAlias(true);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setStrokeWidth(35f);
-        textPaint.setColor(Color.RED);
-        textPaint.setTextSize(75);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(TEXT_SIZE);
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
