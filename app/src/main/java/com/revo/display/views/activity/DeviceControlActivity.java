@@ -37,7 +37,6 @@ import android.widget.TextView;
 
 import com.revo.display.R;
 import com.revo.display.bluetooth.BluetoothLeService;
-import com.revo.display.bluetooth.SampleGattAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
