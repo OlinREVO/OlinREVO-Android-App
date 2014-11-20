@@ -43,12 +43,10 @@ public class RSpeedometer extends View implements SpeedChangeListener {
 
     public RSpeedometer(Context context) {
         super(context);
-        Log.d(TAG, "Speedometer(Context) called");
     }
 
     public RSpeedometer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.d(TAG, "Speedometer(Context, AttributeSet) called");
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.RSpeedometer,
                 0, 0);
@@ -96,10 +94,6 @@ public class RSpeedometer extends View implements SpeedChangeListener {
         offPath = new Path();
     }
 
-    public float getCurrentSpeed() {
-        return mCurrentSpeed;
-    }
-
     public void setCurrentSpeed(float mCurrentSpeed) {
         if (mCurrentSpeed > this.mMaxSpeed)
             this.mCurrentSpeed = mMaxSpeed;
@@ -111,13 +105,11 @@ public class RSpeedometer extends View implements SpeedChangeListener {
 
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
-        Log.d(TAG, "Size changed to " + width + "x" + height);
-
         // Setting up the oval area in which the arc will be drawn
         if (width > height) {
-            radius = height / 3;
+            radius = height / 2;
         } else {
-            radius = width / 3;
+            radius = width / 2;
         }
         oval.set(centerX - radius,
                 centerY - radius,
@@ -129,41 +121,17 @@ public class RSpeedometer extends View implements SpeedChangeListener {
     public void onDraw(Canvas canvas) {
         drawScaleBackground(canvas);
         drawScale(canvas);
-        drawLegend(canvas);
+
         drawReading(canvas);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//		Log.d(TAG, "Width spec: " + MeasureSpec.toString(widthMeasureSpec));
-//		Log.d(TAG, "Height spec: " + MeasureSpec.toString(heightMeasureSpec));
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int chosenWidth = chooseDimension(widthMode, widthSize);
-        int chosenHeight = chooseDimension(heightMode, heightSize);
-
-        int chosenDimension = Math.min(chosenWidth, chosenHeight);
-        centerX = chosenDimension / 2;
-        centerY = chosenDimension / 2;
-        setMeasuredDimension(chosenDimension, chosenDimension);
-    }
-
-    private int chooseDimension(int mode, int size) {
-        if (mode == MeasureSpec.AT_MOST || mode == MeasureSpec.EXACTLY) {
-            return size;
-        } else { // (mode == MeasureSpec.UNSPECIFIED)
-            return getPreferredSize();
-        }
-    }
-
-    // in case there is no size specified
-    private int getPreferredSize() {
-        return 300;
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        centerX = width / 2;
+        centerY = 2 * height / 3;
+        setMeasuredDimension(width, height);
     }
 
     /**
@@ -173,10 +141,9 @@ public class RSpeedometer extends View implements SpeedChangeListener {
      */
     private void drawScaleBackground(Canvas canvas) {
         canvas.drawARGB(0, 0, 0, 0);
-        Log.d(TAG, "drawScaleBackground");
         offPath.reset();
-        for (int i = -180; i < 0; i += 4) {
-            offPath.addArc(oval, i, 3f);
+        for (int i = -180; i < 0; i += 8) {
+            offPath.addArc(oval, i, 6f);
         }
         canvas.drawPath(offPath, offMarkPaint);
     }
@@ -195,8 +162,8 @@ public class RSpeedometer extends View implements SpeedChangeListener {
         Path circle = new Path();
         double halfCircumference = radius * Math.PI;
         double increments = 20;
+        circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
         for (int i = 0; i <= this.mMaxSpeed; i += increments) {
-            circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
             canvas.drawTextOnPath(String.format("%d", i),
                     circle,
                     (float) ((i * halfCircumference / this.mMaxSpeed) - (halfCircumference * .06)),

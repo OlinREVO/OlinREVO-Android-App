@@ -39,11 +39,11 @@ public class DriverFragment extends RevoFragment {
     boolean timerRunning;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
         RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
 
-        rootView.findViewById(R.id.throttle).setOnTouchListener(new View.OnTouchListener() {
+        rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
@@ -54,8 +54,6 @@ public class DriverFragment extends RevoFragment {
                 return false;
             }
         });
-
-
 
         return rootView;
     }

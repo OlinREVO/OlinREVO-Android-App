@@ -106,7 +106,7 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
 
         int chosenDimension = Math.min(chosenWidth, chosenHeight);
         centerX = chosenDimension / 2;
-        centerY = heightSize/2;
+        centerY = heightSize / 2;
         setMeasuredDimension(chosenDimension, chosenDimension);
     }
 

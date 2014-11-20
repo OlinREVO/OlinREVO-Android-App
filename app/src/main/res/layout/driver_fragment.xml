@@ -4,49 +4,36 @@
                 xmlns:custom="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black_overlay">
+                android:background="@color/black_overlay"
+                android:paddingBottom="50dp"
+                android:paddingTop="50dp">
 
     <View
         android:id="@+id/driver_center"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"/>
-    
-    <!--<ImageView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/image"-->
-        <!--android:src="@drawable/empty_battery"-->
-        <!--android:layout_toRightOf="@id/driver_center"/>-->
 
     <com.revo.display.views.custom.RSpeedometer
         android:id="@+id/speedometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/driver_center"
-        custom:currentSpeed="50"
-        custom:maxSpeed="100" />
-        <!--custom:onColor="@color/speedometer_on" />-->
+        android:layout_alignParentLeft="true"
+        custom:maxSpeed="100"/>
+    <!--custom:onColor="@color/speedometer_on" />-->
 
     <com.revo.display.views.custom.RBatteryMeter
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/batterymeter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@id/driver_center"
         custom:currentCharge="60"
         custom:maxCharge="100"/>
-        <!--custom:onColor="@color/batterymeter_on" />-->
-
-    <!-- Temp Throttle -->
-    <Button
-        android:id="@+id/throttle"
-        android:padding="10dp"
-        android:text="Go"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/round_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    
+    <!--custom:onColor="@color/batterymeter_on" />-->
 </RelativeLayout>
