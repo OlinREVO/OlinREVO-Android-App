@@ -9,20 +9,18 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.revo.display.R;
 
-public class Speedometer extends View implements SpeedChangeListener {
+public class RSpeedometer extends View implements SpeedChangeListener {
     public static final float DEFAULT_MAX_SPEED = 100; // Assuming this is km/h and you drive a super-car
-    private static final String TAG = Speedometer.class.getSimpleName();
     final RectF oval = new RectF();
-    // Drawing colors
-    private final float SPEED_TEXT_SIZE = 150f;
+
     // Speedometer internal state
     private float mMaxSpeed;
     private float mCurrentSpeed;
+
     // Scale drawing tools
     private Paint onMarkPaint;
     private Paint offMarkPaint;
@@ -33,33 +31,29 @@ public class Speedometer extends View implements SpeedChangeListener {
     private int ON_COLOR = Color.argb(255, 0xff, 0xA5, 0x00);
     private int OFF_COLOR = Color.argb(255, 0x3e, 0x3e, 0x3e);
     private int SCALE_COLOR = Color.argb(255, 255, 255, 255);
-    private float SCALE_SIZE = 40f;
-    private float READING_SIZE = 80f;
+    private float SCALE_SIZE = 60f;
 
     // Scale configuration
     private float centerX;
     private float centerY;
     private float radius;
 
-    public Speedometer(Context context) {
+    public RSpeedometer(Context context) {
         super(context);
-        Log.d(TAG, "Speedometer(Context) called");
     }
 
-    public Speedometer(Context context, AttributeSet attrs) {
+    public RSpeedometer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.d(TAG, "Speedometer(Context, AttributeSet) called");
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.Speedometer,
+                R.styleable.RSpeedometer,
                 0, 0);
         try {
-            mMaxSpeed = a.getFloat(R.styleable.Speedometer_maxSpeed, DEFAULT_MAX_SPEED);
-            mCurrentSpeed = a.getFloat(R.styleable.Speedometer_currentSpeed, 0);
-            ON_COLOR = a.getColor(R.styleable.Speedometer_onColor, ON_COLOR);
-            OFF_COLOR = a.getColor(R.styleable.Speedometer_offColor, OFF_COLOR);
-            SCALE_COLOR = a.getColor(R.styleable.Speedometer_scaleColor, SCALE_COLOR);
-            SCALE_SIZE = a.getDimension(R.styleable.Speedometer_scaleTextSize, SCALE_SIZE);
-            READING_SIZE = a.getDimension(R.styleable.Speedometer_readingTextSize, READING_SIZE);
+            mMaxSpeed = a.getFloat(R.styleable.RSpeedometer_maxSpeed, DEFAULT_MAX_SPEED);
+            mCurrentSpeed = a.getFloat(R.styleable.RSpeedometer_currentSpeed, 0);
+            ON_COLOR = a.getColor(R.styleable.RSpeedometer_onColor, ON_COLOR);
+            OFF_COLOR = a.getColor(R.styleable.RSpeedometer_offColor, OFF_COLOR);
+            SCALE_COLOR = a.getColor(R.styleable.RSpeedometer_scaleColor, SCALE_COLOR);
+            SCALE_SIZE = a.getDimension(R.styleable.RSpeedometer_scaleTextSize, SCALE_SIZE);
         } finally {
             a.recycle();
         }
@@ -88,7 +82,7 @@ public class Speedometer extends View implements SpeedChangeListener {
         readingPaint = new Paint(scalePaint);
         readingPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         offMarkPaint.setShadowLayer(3f, 0f, 0f, Color.WHITE);
-        readingPaint.setTextSize(SPEED_TEXT_SIZE);
+        readingPaint.setTextSize(200f);
         readingPaint.setTypeface(Typeface.SANS_SERIF);
         readingPaint.setColor(Color.WHITE);
 
@@ -96,28 +90,13 @@ public class Speedometer extends View implements SpeedChangeListener {
         offPath = new Path();
     }
 
-    public float getCurrentSpeed() {
-        return mCurrentSpeed;
-    }
-
-    public void setCurrentSpeed(float mCurrentSpeed) {
-        if (mCurrentSpeed > this.mMaxSpeed)
-            this.mCurrentSpeed = mMaxSpeed;
-        else if (mCurrentSpeed < 0)
-            this.mCurrentSpeed = 0;
-        else
-            this.mCurrentSpeed = mCurrentSpeed;
-    }
-
     @Override
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
-        Log.d(TAG, "Size changed to " + width + "x" + height);
-
         // Setting up the oval area in which the arc will be drawn
         if (width > height) {
-            radius = height / 4;
+            radius = height / 2;
         } else {
-            radius = width / 4;
+            radius = width / 2;
         }
         oval.set(centerX - radius,
                 centerY - radius,
@@ -129,41 +108,17 @@ public class Speedometer extends View implements SpeedChangeListener {
     public void onDraw(Canvas canvas) {
         drawScaleBackground(canvas);
         drawScale(canvas);
-        drawLegend(canvas);
+
         drawReading(canvas);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//		Log.d(TAG, "Width spec: " + MeasureSpec.toString(widthMeasureSpec));
-//		Log.d(TAG, "Height spec: " + MeasureSpec.toString(heightMeasureSpec));
-
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int chosenWidth = chooseDimension(widthMode, widthSize);
-        int chosenHeight = chooseDimension(heightMode, heightSize);
-
-        int chosenDimension = Math.min(chosenWidth, chosenHeight);
-        centerX = chosenDimension / 2;
-        centerY = chosenDimension / 2;
-        setMeasuredDimension(chosenDimension, chosenDimension);
-    }
-
-    private int chooseDimension(int mode, int size) {
-        if (mode == MeasureSpec.AT_MOST || mode == MeasureSpec.EXACTLY) {
-            return size;
-        } else { // (mode == MeasureSpec.UNSPECIFIED)
-            return getPreferredSize();
-        }
-    }
-
-    // in case there is no size specified
-    private int getPreferredSize() {
-        return 300;
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = MeasureSpec.getSize(heightMeasureSpec);
+        centerX = width / 2;
+        centerY = 2 * height / 3;
+        setMeasuredDimension(width, height);
     }
 
     /**
@@ -173,10 +128,9 @@ public class Speedometer extends View implements SpeedChangeListener {
      */
     private void drawScaleBackground(Canvas canvas) {
         canvas.drawARGB(0, 0, 0, 0);
-        Log.d(TAG, "drawScaleBackground");
         offPath.reset();
-        for (int i = -180; i < 0; i += 4) {
-            offPath.addArc(oval, i, 2f);
+        for (int i = -180; i < 0; i += 8) {
+            offPath.addArc(oval, i, 6f);
         }
         canvas.drawPath(offPath, offMarkPaint);
     }
@@ -184,27 +138,9 @@ public class Speedometer extends View implements SpeedChangeListener {
     private void drawScale(Canvas canvas) {
         onPath.reset();
         for (int i = -180; i < (mCurrentSpeed / mMaxSpeed) * 180 - 180; i += 4) {
-            onPath.addArc(oval, i, 10f);
+            onPath.addArc(oval, i, 3f);
         }
         canvas.drawPath(onPath, onMarkPaint);
-    }
-
-    private void drawLegend(Canvas canvas) {
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
-        canvas.rotate(-180, centerX, centerY);
-        Path circle = new Path();
-        double halfCircumference = radius * Math.PI;
-        double increments = 20;
-        for (int i = 0; i < this.mMaxSpeed; i += increments) {
-            circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
-            canvas.drawTextOnPath(String.format("%d", i),
-                    circle,
-                    (float) (i * halfCircumference / this.mMaxSpeed),
-                    -30f,
-                    scalePaint);
-        }
-
-        canvas.restore();
     }
 
     private void drawReading(Canvas canvas) {
@@ -221,9 +157,36 @@ public class Speedometer extends View implements SpeedChangeListener {
         canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
     }
 
+    private void drawLegend(Canvas canvas) {
+        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+        canvas.rotate(-180, centerX, centerY);
+        Path circle = new Path();
+        double halfCircumference = radius * Math.PI;
+        double increments = 20;
+        circle.addCircle(centerX, centerY, radius, Path.Direction.CW);
+        for (int i = 0; i <= this.mMaxSpeed; i += increments) {
+            canvas.drawTextOnPath(String.format("%d", i),
+                    circle,
+                    (float) ((i * halfCircumference / this.mMaxSpeed) - (halfCircumference * .06)),
+                    -30f,
+                    scalePaint);
+        }
+
+        canvas.restore();
+    }
+
     @Override
     public void onSpeedChanged(float newSpeedValue) {
         this.setCurrentSpeed(newSpeedValue);
         this.invalidate();
+    }
+
+    public void setCurrentSpeed(float mCurrentSpeed) {
+        if (mCurrentSpeed > this.mMaxSpeed)
+            this.mCurrentSpeed = mMaxSpeed;
+        else if (mCurrentSpeed < 0)
+            this.mCurrentSpeed = 0;
+        else
+            this.mCurrentSpeed = mCurrentSpeed;
     }
 }

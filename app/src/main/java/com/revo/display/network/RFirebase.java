@@ -11,13 +11,13 @@ import com.firebase.client.ValueEventListener;
 /**
  * Created by sihrc on 9/24/14.
  */
-public class FirebaseHelper {
+public class RFirebase {
     final static private String DB_URL = "https://revodisplay.firebaseio.com/";
 
     Context context;
     Firebase firebase;
 
-    public FirebaseHelper(Context context) {
+    public RFirebase(Context context) {
         this.context = context;
         this.firebase = new Firebase(DB_URL);
     }

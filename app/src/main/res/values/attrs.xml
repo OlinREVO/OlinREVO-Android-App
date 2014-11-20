@@ -9,7 +9,7 @@
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="Speedometer">
+    <declare-styleable name="RSpeedometer">
         <attr name="maxSpeed" format="float"></attr>
         <attr name="currentSpeed" format="float"></attr>
         <attr name="onColor" format="color"></attr>
@@ -17,6 +17,16 @@
         <attr name="scaleColor" format="color"></attr>
         <attr name="scaleTextSize" format="dimension"></attr>
         <attr name="readingTextSize" format="dimension"></attr>
+    </declare-styleable>
+
+    <declare-styleable name="RBatteryMeter">
+        <attr name="maxCharge" format="float"></attr>
+        <attr name="currentCharge" format="float"></attr>
+        <attr name="batteryOnColor" format="color"></attr>
+        <attr name="batteryOffColor" format="color"></attr>
+        <attr name="batteryScaleColor" format="color"></attr>
+        <attr name="batteryScaleTextSize" format="dimension"></attr>
+        <attr name="batteryReadingTextSize" format="dimension"></attr>
     </declare-styleable>
 
 </resources>

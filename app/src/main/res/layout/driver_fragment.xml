@@ -4,32 +4,32 @@
                 xmlns:custom="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black_overlay">
+                android:background="@color/black_overlay"
+                android:paddingBottom="50dp"
+                android:paddingTop="50dp">
 
     <View
         android:id="@+id/driver_center"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"/>
-    
-    <com.revo.display.views.custom.Speedometer
+
+    <com.revo.display.views.custom.RSpeedometer
         android:id="@+id/speedometer"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/driver_center"
-        custom:currentSpeed="0"
-        custom:maxSpeed="100"
-        custom:onColor="@color/speedometer_on"/>
+        android:layout_alignParentLeft="true"
+        custom:maxSpeed="100"/>
+    <!--custom:onColor="@color/speedometer_on" />-->
 
-    <!-- Temp Throttle -->
-    <Button
-        android:id="@+id/throttle"
-        android:padding="10dp"
-        android:text="Go"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:layout_below="@id/speedometer"
-        android:background="@drawable/round_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <com.revo.display.views.custom.RBatteryMeter
+        android:id="@+id/batterymeter"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/driver_center"
+        custom:maxCharge="100"/>
+    <!--custom:onColor="@color/batterymeter_on" />-->
 </RelativeLayout>

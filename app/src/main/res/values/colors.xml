@@ -6,6 +6,7 @@
     <color name="black_overlay">#000000</color>
 
     <!-- Speedometer -->
-    <color name="speedometer_on">#ff009600</color>
+    <color name="speedometer_on">#ffff9600</color>
+    <color name="batterymeter_on">#ff009600</color>
 
 </resources>
