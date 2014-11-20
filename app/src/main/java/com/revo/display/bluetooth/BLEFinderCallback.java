@@ -14,6 +14,7 @@ import java.util.UUID;
 
 /**
  * Created by mwismer on 11/3/14.
+ * Refactored by sihrc on 11/19/14
  */
 // Callback used to get us the results from the server (device)
 public class BLEFinderCallback extends BluetoothGattCallback {
@@ -74,6 +75,7 @@ public class BLEFinderCallback extends BluetoothGattCallback {
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
         super.onCharacteristicWrite(gatt, characteristic, status);
     }
+
 
     // Returns response to descriptor read request
     @Override
