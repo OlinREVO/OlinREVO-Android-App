@@ -13,7 +13,7 @@ import android.util.Log;
  * Created by mwismer on 11/3/14.
  * Refactored by sihrc on 11/19/14
  */
-public final class BLEActivity extends Activity {
+public class BLEActivity extends Activity {
     public final static int ENABLE_BLE = 21305;
     //Log TAG
     private final static String TAG = "REVO::BLEHandler";
@@ -65,7 +65,7 @@ public final class BLEActivity extends Activity {
                 public void run() {
                     mBLEAdapter.stopLeScan(mBLECallback);
                     if (device != null) {
-                        device.connectGatt(BLEActivity.this, false, new BLEFinderCallback(device));
+                        device.connectGatt(BLEActivity.this, false, new BLEFinderCallback());
                     }
                 }
             }, SCAN_PERIOD);

@@ -1,6 +1,5 @@
 package com.revo.display.views.activity;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.revo.display.R;
+import com.revo.display.bluetooth.BLEActivity;
 import com.revo.display.views.fragment.DeveloperFragment;
 import com.revo.display.views.fragment.DriverFragment;
 import com.revo.display.views.fragment.RevoFragment;
@@ -23,7 +23,7 @@ import com.revo.display.views.fragment.SpectatorFragment;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class RevoActivity extends Activity {
+public class RevoActivity extends BLEActivity {
 
     // Fragment Management
     FragmentManager fragmentManager;
@@ -46,6 +46,9 @@ public class RevoActivity extends Activity {
         //Initializing Navigation Management
         fragmentManager = getFragmentManager();
         setupDrawer();
+
+        // Start Scanning for Devices
+        scanBLE("");
     }
 
     private void setupDrawer() {
