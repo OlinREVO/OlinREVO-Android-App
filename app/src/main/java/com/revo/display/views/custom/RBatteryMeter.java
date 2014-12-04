@@ -26,6 +26,8 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
     private int ON_COLOR = Color.argb(255, 0xff, 0xA5, 0x00);
     private int OFF_COLOR = Color.argb(255, 0x3e, 0x3e, 0x3e);
     private int SCALE_COLOR = Color.argb(255, 255, 255, 255);
+    private int batteryImageHeight;
+    private int batteryImageWidth;
     private float SCALE_SIZE = 35f;
     private float READING_SIZE = 80f;
     private Paint readingPaint;
@@ -34,6 +36,7 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
     private float mCurrentCharge;
 
     Drawable battery;
+    Bitmap batteryBitmap;
 
     public RBatteryMeter(Context context) {
         super(context);
@@ -67,6 +70,7 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         readingPaint.setColor(Color.WHITE);
 
         battery = getResources().getDrawable(R.drawable.empty_battery);
+        batteryBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.empty_battery);
     }
 
     public void setCurrentCharge(float mCurrentCharge) {
@@ -104,6 +108,9 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         centerX = chosenDimension / 2;
         centerY = heightSize/2;
         setMeasuredDimension(chosenDimension, chosenDimension);
+
+        batteryImageHeight = heightSize;
+        batteryImageWidth = widthSize / 4;
     }
 
     private static int chooseDimension(int mode, int size) {
@@ -124,24 +131,34 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
         if (rect.top == rect.bottom) {
             rect.top += 1;
         }
+        rect.left = (rect.right - batteryImageWidth);
         canvas.drawRect(rect, chargePaint);
+
     }
 
     private void drawBattery(Canvas canvas) {
-//        battery.setBounds(canvas.getClipBounds());
-//        battery.draw(canvas);
+        rect = canvas.getClipBounds();
+        rect.top = (rect.bottom - batteryImageHeight);
+        if (rect.top < 0) {
+            rect.top = 0;
+        }
+        rect.left = (rect.right - batteryImageWidth);
+        battery.setBounds(rect);
+        battery.setAlpha(120);
+        battery.draw(canvas);
     }
 
     private void drawReading(Canvas canvas) {
         Path path = new Path();
+        rect = canvas.getClipBounds();
         String message = String.format("%d", (int) this.mCurrentCharge);
         float[] widths = new float[message.length()];
         readingPaint.getTextWidths(message, widths);
         float advance = 0;
         for (double width : widths)
             advance += width;
-        path.moveTo(centerX - advance / 2, centerY);
-        path.lineTo(centerX + advance / 2, centerY);
+        path.moveTo((rect.right - batteryImageWidth / 2) - advance / 2, centerY);
+        path.lineTo((rect.right - batteryImageWidth / 2) + advance / 2, centerY);
         canvas.drawTextOnPath(message, path, 0f, 0f, readingPaint);
     }
 

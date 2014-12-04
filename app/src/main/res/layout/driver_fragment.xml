@@ -25,10 +25,10 @@
             custom:maxSpeed="100"
             android:layout_weight="1" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" />
+        <!--<View-->
+            <!--android:layout_width="400dp"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_weight="1" />-->
 
         <com.revo.display.views.custom.RBatteryMeter
             android:layout_width="fill_parent"
