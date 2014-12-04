@@ -46,10 +46,6 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
             mMaxCharge = a.getFloat(R.styleable.RBatteryMeter_maxCharge, DEFAULT_MAX_CHARGE);
             mCurrentCharge = a.getFloat(R.styleable.RBatteryMeter_currentCharge, 0);
             ON_COLOR = a.getColor(R.styleable.RBatteryMeter_batteryOnColor, ON_COLOR);
-            OFF_COLOR = a.getColor(R.styleable.RBatteryMeter_batteryOffColor, OFF_COLOR);
-            SCALE_COLOR = a.getColor(R.styleable.RBatteryMeter_batteryScaleColor, SCALE_COLOR);
-            SCALE_SIZE = a.getDimension(R.styleable.RBatteryMeter_batteryScaleTextSize, SCALE_SIZE);
-            READING_SIZE = a.getDimension(R.styleable.RBatteryMeter_batteryReadingTextSize, READING_SIZE);
         } finally {
             a.recycle();
         }
@@ -132,8 +128,8 @@ public class RBatteryMeter extends View implements BatteryChangeListener{
     }
 
     private void drawBattery(Canvas canvas) {
-        battery.setBounds(canvas.getClipBounds());
-        battery.draw(canvas);
+//        battery.setBounds(canvas.getClipBounds());
+//        battery.draw(canvas);
     }
 
     private void drawReading(Canvas canvas) {

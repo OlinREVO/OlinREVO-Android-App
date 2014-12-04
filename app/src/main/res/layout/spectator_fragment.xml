@@ -12,16 +12,23 @@
         android:layout_height="0dp"
         android:layout_centerInParent="true"/>
 
+    <View
+        android:id="@+id/spectator_spacer"
+        android:layout_width="420dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"/>
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Spectator Fragment"/>
 
     <com.revo.display.views.custom.RBatteryMeter
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/batterymeter"
-        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/spectator_spacer"
+        android:background="@drawable/empty_battery"
         custom:currentCharge="60"
         custom:maxCharge="100"/>
 
