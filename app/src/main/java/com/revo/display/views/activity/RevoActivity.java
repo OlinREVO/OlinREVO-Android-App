@@ -48,7 +48,7 @@ public class RevoActivity extends BLEActivity {
         setupDrawer();
 
         // Start Scanning for Devices
-        scanBLE("");
+        scanBLE("EE:75:0D:3C:0E:2D");
     }
 
     private void setupDrawer() {

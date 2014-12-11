@@ -19,6 +19,8 @@ public class BLEActivity extends Activity {
     private final static String TAG = "REVO::BLEHandler";
     //Scanning Timer
     private Handler mHandler = new Handler();
+    //BLE Handler
+    BLEHandler handler = new BLEHandler();
 
     final private static long SCAN_PERIOD = 10000; //Time to scan in ms
 
@@ -48,6 +50,7 @@ public class BLEActivity extends Activity {
     }
 
     public void scanBLE(String nameOfDevice) {
+        handler.setActivity(this);
         deviceName = nameOfDevice;
         startScan(checkBLEEnabled());
     }
@@ -65,7 +68,7 @@ public class BLEActivity extends Activity {
                 public void run() {
                     mBLEAdapter.stopLeScan(mBLECallback);
                     if (device != null) {
-                        device.connectGatt(BLEActivity.this, false, new BLEFinderCallback());
+                        device.connectGatt(BLEActivity.this, false, handler);
                     }
                 }
             }, SCAN_PERIOD);
