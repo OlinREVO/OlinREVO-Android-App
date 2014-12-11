@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.revo.display.R;
 import com.revo.display.bluetooth.BLEActivity;
+import com.revo.display.RevoApplication;
 import com.revo.display.views.fragment.DeveloperFragment;
 import com.revo.display.views.fragment.DriverFragment;
 import com.revo.display.views.fragment.RevoFragment;
@@ -27,7 +28,7 @@ public class RevoActivity extends BLEActivity {
 
     // Fragment Management
     FragmentManager fragmentManager;
-    String currentFragment;
+    RevoFragment currentFragment;
 
     //Drawer Management
     private String[] sectionTitles = new String[]{"Driver", "Spectator", "Developer"};
@@ -70,14 +71,14 @@ public class RevoActivity extends BLEActivity {
         if (old == null) {
             Log.i("MainActivity", "Using a new fragment for " + fragment.tag());
             getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-            currentFragment = fragment.tag();
+            currentFragment = fragment;
             return;
         }
 
         Log.i("MainActivity", "Found an old fragment for " + old.tag());
         getFragmentManager().beginTransaction().replace(R.id.content_frame, old).commit();
         old.onResume();
-        currentFragment = old.tag();
+        currentFragment = old;
     }
 
     /**
@@ -94,8 +95,16 @@ public class RevoActivity extends BLEActivity {
                 fragment = new SpectatorFragment();
                 break;
             case 2:
-            default:
                 fragment = new DeveloperFragment();
+                break;
+            case 3:
+                boolean notChecked = !mDrawerList.isItemChecked(position);
+                RevoApplication.isDriver = notChecked;
+                mDrawerList.setItemChecked(position, notChecked);
+                currentFragment.updateMode();
+                return;
+            default:
+                return;
         }
 
         // Insert the fragment by replacing any existing fragment

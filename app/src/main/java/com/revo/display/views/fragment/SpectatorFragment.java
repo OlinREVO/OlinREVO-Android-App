@@ -21,4 +21,14 @@ public class SpectatorFragment extends RevoFragment {
     public String tag() {
         return SpectatorFragment.class.getSimpleName();
     }
+
+    @Override
+    public void setupDriverMode() {
+
+    }
+
+    @Override
+    public void setupNotDriverMode() {
+
+    }
 }

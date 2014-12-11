@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.revo.display.R;
 
-public class RBatteryMeter extends View implements BatteryChangeListener {
+public class RBatteryMeter extends View implements ValueChangeListener {
     public static final float DEFAULT_MAX_CHARGE = 100;
     Drawable battery;
     private float centerX, centerY;
@@ -113,7 +113,7 @@ public class RBatteryMeter extends View implements BatteryChangeListener {
     }
 
     @Override
-    public void onChargeChanged(float newChargeValue) {
+    public void onValueChanged(float newChargeValue) {
         this.setCurrentCharge(newChargeValue);
         chargePaint.setColor(Color.argb(140, 255 - (int) ((mCurrentCharge / mMaxCharge) * 255), (int) ((mCurrentCharge / mMaxCharge) * 255), 0));
         this.invalidate();
@@ -126,5 +126,9 @@ public class RBatteryMeter extends View implements BatteryChangeListener {
             this.mCurrentCharge = 0;
         else
             this.mCurrentCharge = mCurrentCharge;
+    }
+
+    public float getCurrentCharge() {
+        return this.mCurrentCharge;
     }
 }
