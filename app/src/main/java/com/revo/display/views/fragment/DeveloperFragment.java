@@ -21,4 +21,14 @@ public class DeveloperFragment extends RevoFragment {
     public String tag() {
         return DeveloperFragment.class.getSimpleName();
     }
+
+    @Override
+    public void setupDriverMode() {
+
+    }
+
+    @Override
+    public void setupNotDriverMode() {
+
+    }
 }

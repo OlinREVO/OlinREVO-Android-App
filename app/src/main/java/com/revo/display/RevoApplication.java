@@ -9,12 +9,9 @@ import com.revo.display.network.RFirebase;
  */
 public class RevoApplication extends Application {
     public static RevoApplication app;
-    RFirebase fb;
+    public static boolean isDriver = false;
 
-    // Request Code for Bluetooth
-    final public static int REQUEST_ENABLE_BT = 100;
-    // Timeout for Bluetooth Scanning
-    final public static long SCAN_PERIOD = 10000;
+    RFirebase fb;
 
     @Override
     public void onCreate() {

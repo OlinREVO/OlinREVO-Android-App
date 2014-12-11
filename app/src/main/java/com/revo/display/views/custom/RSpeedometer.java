@@ -13,7 +13,7 @@ import android.view.View;
 
 import com.revo.display.R;
 
-public class RSpeedometer extends View implements SpeedChangeListener {
+public class RSpeedometer extends View implements ValueChangeListener {
     public static final float DEFAULT_MAX_SPEED = 100; // Assuming this is km/h and you drive a super-car
     final RectF oval = new RectF();
 
@@ -176,7 +176,7 @@ public class RSpeedometer extends View implements SpeedChangeListener {
     }
 
     @Override
-    public void onSpeedChanged(float newSpeedValue) {
+    public void onValueChanged(float newSpeedValue) {
         this.setCurrentSpeed(newSpeedValue);
         this.invalidate();
     }
@@ -188,5 +188,9 @@ public class RSpeedometer extends View implements SpeedChangeListener {
             this.mCurrentSpeed = 0;
         else
             this.mCurrentSpeed = mCurrentSpeed;
+    }
+
+    public float getCurrentSpeed() {
+        return this.mCurrentSpeed;
     }
 }
