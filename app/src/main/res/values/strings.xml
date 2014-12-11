@@ -3,6 +3,8 @@
 
     <string name="app_name">Display</string>
     <string name="revo_watermark">Olin\nREVO</string>
+    <string name="ble_device_mac">EE:75:0D:3C:0E:2D</string>
+    <string name="switch_driver_mode">Switched to %s mode</string>
 
     <!-- Bluetooth -->
     <string name="ble_not_supported">BLE is not supported</string>
@@ -27,7 +29,7 @@
 
 
         ]]>
-    </string>git
+    </string>
 
     <!-- Menu items -->
     <string name="menu_connect">Connect</string>
