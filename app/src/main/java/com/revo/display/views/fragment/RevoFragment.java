@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.revo.display.RevoApplication;
+
 /**
  * Created by sihrc on 9/20/14.
  */
@@ -13,9 +15,12 @@ public abstract class RevoFragment extends Fragment {
     private static String IS_DRIVER_KEY = "com.revo.display.views.fragment.is_driver";
 
     public abstract String tag();
-
-    public boolean isDriver() {
-        SharedPreferences sharedPrefs = getActivity().getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
-        return true; //sharedPrefs.getBoolean(IS_DRIVER_KEY, false);
+    public abstract void setupDriverMode();
+    public abstract void setupNotDriverMode();
+    public void updateMode() {
+        if (RevoApplication.isDriver)
+            setupDriverMode();
+        else
+            setupNotDriverMode();
     }
 }

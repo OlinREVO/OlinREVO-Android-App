@@ -1,20 +1,23 @@
 package com.revo.display;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-import com.revo.display.bluetooth.Bluetooth;
-import com.revo.display.bluetooth.ChangeListener;
-import com.revo.display.bluetooth.DataWatcher;
-import com.revo.display.network.FirebaseHelper;
+import com.revo.display.network.RFirebase;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Created by sihrc on 9/24/14.
  */
 public class RevoApplication extends Application {
     public static RevoApplication app;
-    FirebaseHelper fb;
-    Bluetooth bluetooth;
-    DataWatcher watcher;
+    public static boolean isDriver = false;
+
+    RFirebase fb;
 
     @Override
     public void onCreate() {
@@ -22,20 +25,10 @@ public class RevoApplication extends Application {
 
         //Grab Static Reference
         app = this;
-        fb = new FirebaseHelper(this);
-        watcher = new DataWatcher();
-        bluetooth = new Bluetooth(this, watcher);
+        fb = new RFirebase(this);
     }
 
-    public Bluetooth getBluetoothConnection() {
-        return bluetooth;
-    }
-
-    public FirebaseHelper getFireBaseHelper() {
+    public RFirebase getFireBaseHelper() {
         return fb;
-    }
-
-    public void addDataListener(String id, ChangeListener listener) {
-        watcher.addListener(id, listener);
     }
 }

@@ -18,7 +18,7 @@ import com.revo.display.sensors.OrientationSensor;
 /**
  * Created by isaac on 10/24/14.
  */
-public class Compass extends View implements OrientationChangeListener {
+public class Compass extends View implements ValueChangeListener {
     private static final String TAG = Compass.class.getSimpleName();
     private static final double DIRECTION_INCREMENT = 5;
     private static final float TEXT_SIZE = 75f;
@@ -55,16 +55,17 @@ public class Compass extends View implements OrientationChangeListener {
         this.direction = direction;
     }
 
-    @Override
-    public void onDirectionChange(float direction) {
-        System.out.println("Direction: " + direction);
-
+    public void onValueChanged(float newDirection) {
         // round direction to multiples of DIRECTION_INCREMENT
-        direction = (float) (direction - (direction % DIRECTION_INCREMENT));
-        if (direction != this.direction) {
-            setDirection(direction);
+        newDirection = round(newDirection, (float) DIRECTION_INCREMENT);
+        if (newDirection != this.direction) {
+            setDirection(newDirection);
             this.invalidate();
         }
+    }
+
+    private float round(float value, float increment) {
+       return value - (value % increment);
     }
 
     // 

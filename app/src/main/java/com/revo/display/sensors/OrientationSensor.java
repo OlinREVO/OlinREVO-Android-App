@@ -57,6 +57,10 @@ public class OrientationSensor implements SensorEventListener {
         listeners.add(listener);
     }
 
+    public void unregisterListener(OrientationChangeListener listener) {
+        listeners.remove(listener);
+    }
+
     private void notifyListeners() {
         for (OrientationChangeListener listener : listeners) {
             listener.onDirectionChange(direction);

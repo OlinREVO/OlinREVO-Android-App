@@ -1,8 +1,6 @@
 package com.revo.display.views.activity;
 
-import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -14,8 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.revo.display.R;
+import com.revo.display.bluetooth.BLEActivity;
 import com.revo.display.RevoApplication;
-import com.revo.display.bluetooth.Bluetooth;
 import com.revo.display.views.fragment.DeveloperFragment;
 import com.revo.display.views.fragment.DriverFragment;
 import com.revo.display.views.fragment.RevoFragment;
@@ -26,11 +24,11 @@ import com.revo.display.views.fragment.SpectatorFragment;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class MainActivity extends Activity {
+public class RevoActivity extends BLEActivity {
 
     // Fragment Management
     FragmentManager fragmentManager;
-    String currentFragment;
+    RevoFragment currentFragment;
 
     //Drawer Management
     private String[] sectionTitles = new String[]{"Driver", "Spectator", "Developer"};
@@ -44,14 +42,14 @@ public class MainActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
-
-        //Initializing Bluetooth
-        RevoApplication.app.getBluetoothConnection().initializeBTAdapter(MainActivity.this);
+        setContentView(R.layout.revo_activity);
 
         //Initializing Navigation Management
         fragmentManager = getFragmentManager();
         setupDrawer();
+
+        // Start Scanning for Devices
+        scanBLE("EE:75:0D:3C:0E:2D");
     }
 
     private void setupDrawer() {
@@ -73,14 +71,14 @@ public class MainActivity extends Activity {
         if (old == null) {
             Log.i("MainActivity", "Using a new fragment for " + fragment.tag());
             getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-            currentFragment = fragment.tag();
+            currentFragment = fragment;
             return;
         }
 
         Log.i("MainActivity", "Found an old fragment for " + old.tag());
         getFragmentManager().beginTransaction().replace(R.id.content_frame, old).commit();
         old.onResume();
-        currentFragment = old.tag();
+        currentFragment = old;
     }
 
     /**
@@ -97,8 +95,16 @@ public class MainActivity extends Activity {
                 fragment = new SpectatorFragment();
                 break;
             case 2:
-            default:
                 fragment = new DeveloperFragment();
+                break;
+            case 3:
+                boolean notChecked = !mDrawerList.isItemChecked(position);
+                RevoApplication.isDriver = notChecked;
+                mDrawerList.setItemChecked(position, notChecked);
+                currentFragment.updateMode();
+                return;
+            default:
+                return;
         }
 
         // Insert the fragment by replacing any existing fragment
@@ -115,13 +121,6 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
             selectItem(position);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Bluetooth.REQUEST_ENABLE_BT) {
-            Log.i("Bluetooth Enabled", "Returned to Activity");
         }
     }
 }
