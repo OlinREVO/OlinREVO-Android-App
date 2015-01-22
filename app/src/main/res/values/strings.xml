@@ -37,4 +37,7 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
 
+    <!-- Developer Fragment -->
+    <string name="can_bus_title">CAN BUS CONSOLE</string>
+
 </resources>
