@@ -17,17 +17,18 @@ import com.revo.display.bluetooth.ValuesCallback;
 import com.revo.display.network.RFirebase;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * Created by sihrc on 9/20/14.
  */
 public class DeveloperFragment extends RevoFragment {
     RFirebase ref = RevoApplication.app.getFireBaseHelper();
-    Firebase firebaseRef = ref.getRef(new String[]{"developer"});
     Firebase firebaseLogsRef = ref.getRef(new String[]{"logs"});
 
     TextView console;
     StringBuffer buffer;
+    Long previous = System.currentTimeMillis();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,20 +68,6 @@ public class DeveloperFragment extends RevoFragment {
 
         // Get data from firebase
         firebaseLogsRef.addChildEventListener(consoleData);
-//        ref.registerListener(DeveloperFragment.class.getSimpleName() + "console", new String[]{"developer", "console"}, new ValueCallback() {
-//            @Override
-//            public void handleValue(Object value) {
-//                if (value.equals(previous)) {
-//                    return;
-//                }
-//
-//                previous = (String) value;
-//
-//                if (console != null) {
-//                    console.setText(buffer.toString());
-//                }
-//            }
-//        });
     }
 
     ChildEventListener consoleData = new ChildEventListener() {
@@ -88,11 +75,28 @@ public class DeveloperFragment extends RevoFragment {
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             if (buffer == null)
                 return;
+            Long currTime = (Long) dataSnapshot.child("timestamp").getValue();
+            if (currTime <= previous) {
+                return;
+            }
 
-            buffer.append(dataSnapshot.child("timestamp").getValue());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(currTime);
+            int hours = calendar.get(Calendar.HOUR_OF_DAY);
+            int minutes = calendar.get(Calendar.MINUTE);
+            int seconds = calendar.get(Calendar.SECOND);
+
+            buffer.append('[');
+            buffer.append(hours < 10 ? "0" + hours : hours);
+            buffer.append(':');
+            buffer.append(minutes < 10 ? "0" + minutes : minutes);
+            buffer.append(':');
+            buffer.append(seconds < 10 ? "0" + seconds : seconds);
+            buffer.append("] ");
             buffer.append(" : ");
             buffer.append(dataSnapshot.child("data").getValue());
             buffer.append('\n');
+            previous = currTime;
 
             if (console != null) {
                 console.setText(buffer.toString());
@@ -116,7 +120,6 @@ public class DeveloperFragment extends RevoFragment {
                 String valueStr = Arrays.toString(values);
                 buffer.append(valueStr);
                 buffer.append('\n');
-                firebaseRef.setValue(valueStr);
                 if (console != null) {
                     console.setText(buffer.toString());
                 }
