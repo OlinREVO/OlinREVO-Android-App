@@ -64,14 +64,16 @@ public class DriverFragment extends RevoFragment {
             activity.registerReceiver(receiver, new IntentFilter("REVO_APP_DISPLAY"));
         }
 
-        orientationSensor = new OrientationSensor(getActivity());
-        orientationSensor.registerListener(new ValueCallback() {
-            @Override
-            public void handleValue(Object value) {
-                firebaseRef.child("direction").setValue((Long) value);
-            }
-        });
-
+        if (orientationSensor == null) {
+            orientationSensor = new OrientationSensor(getActivity());
+            orientationSensor.registerListener(new ValueCallback() {
+                @Override
+                public void handleValue(Object value) {
+                    Log.d("New Direction", ((Long) value).toString());
+                    firebaseRef.child("direction").setValue((Long) value);
+                }
+            });
+        }
 
         if (ref != null) {
             ref.deregisterListener(DriverFragment.class.getSimpleName() + "charge", new String[]{"driver", "charge"});
@@ -85,6 +87,11 @@ public class DriverFragment extends RevoFragment {
         if (activity != null && receiver != null && registered) {
             activity.unregisterReceiver(receiver);
             registered = false;
+        }
+
+        if (orientationSensor != null) {
+            orientationSensor.unregisterSensors();
+            orientationSensor.unregisterListeners();
         }
 
         // Get data from firebase

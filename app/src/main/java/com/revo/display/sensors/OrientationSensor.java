@@ -65,7 +65,7 @@ public class OrientationSensor implements SensorEventListener {
 
     private void notifyListeners() {
         for (ValueCallback listener : listeners) {
-            listener.handleValue(direction);
+            listener.handleValue((long) direction);
         }
     }
 

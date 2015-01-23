@@ -20,10 +20,10 @@ import com.revo.display.sensors.OrientationSensor;
  */
 public class Compass extends View implements ValueChangeListener {
     private static final String TAG = Compass.class.getSimpleName();
-    private static final double DIRECTION_INCREMENT = 5;
+    private static final long DIRECTION_INCREMENT = 5;
     private static final float TEXT_SIZE = 75f;
 
-    private double direction;
+    private long direction;
     private Point center;
     private double radius;
     private double innerRadius;
@@ -51,20 +51,19 @@ public class Compass extends View implements ValueChangeListener {
         // TODO: add visual attributes
     }
 
-    public void setDirection(double direction) {
+    public void setDirection(long direction) {
         this.direction = direction;
     }
 
     public void onValueChanged(float newDirection) {
         // round direction to multiples of DIRECTION_INCREMENT
-        newDirection = round(newDirection, (float) DIRECTION_INCREMENT);
-        if (newDirection != this.direction) {
-            setDirection(newDirection);
-            this.invalidate();
-        }
+        long dir = round((long) newDirection, DIRECTION_INCREMENT);
+        Log.d("Compass", "" + dir);
+        setDirection(dir);
+        this.invalidate();
     }
 
-    private float round(float value, float increment) {
+    private long round(long value, long increment) {
        return value - (value % increment);
     }
 
@@ -80,11 +79,6 @@ public class Compass extends View implements ValueChangeListener {
         innerRadius = (0.9 * radius);
         center.x = width / 2;
         center.y = height / 2;
-
-        System.out.println("\n\nSIZE CHANGED");
-        System.out.println("=============");
-        System.out.println("radius: " + radius);
-        System.out.println("=============\n\n");
     }
 
     public void initDrawingTools() {

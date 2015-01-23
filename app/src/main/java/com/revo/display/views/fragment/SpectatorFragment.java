@@ -48,7 +48,15 @@ public class SpectatorFragment extends RevoFragment {
 
     @Override
     public void setupDriverMode() {
-        // do nothing
+        // Get data from firebase
+        ref.registerListener(SpectatorFragment.class.getSimpleName() + "direction", new String[] {"driver", "direction"}, new ValueCallback() {
+            @Override
+            public void handleValue(Object value) {
+                if (compass != null) {
+                    compass.onValueChanged((Long) value);
+                }
+            }
+        });
     }
 
     @Override
@@ -57,7 +65,6 @@ public class SpectatorFragment extends RevoFragment {
         ref.registerListener(SpectatorFragment.class.getSimpleName() + "direction", new String[] {"driver", "direction"}, new ValueCallback() {
             @Override
             public void handleValue(Object value) {
-                Log.d("spectator handle value", "hello?");
                 if (compass != null) {
                     compass.onValueChanged((Long) value);
                 }
