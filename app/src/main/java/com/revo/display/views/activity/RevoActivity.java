@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.revo.display.R;
 import com.revo.display.bluetooth.BLEActivity;
@@ -31,7 +32,8 @@ public class RevoActivity extends BLEActivity {
     RevoFragment currentFragment;
 
     //Drawer Management
-    private String[] sectionTitles = new String[]{"Driver", "Spectator", "Developer"};
+    ArrayAdapter adapter;
+    private String[] sectionTitles = new String[]{"Driver", "Spectator", "Developer", "Switch to Driver"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -49,7 +51,8 @@ public class RevoActivity extends BLEActivity {
         setupDrawer();
 
         // Start Scanning for Devices
-        scanBLE("EE:75:0D:3C:0E:2D");
+        if (RevoApplication.isDriver)
+            scanBLE(getString(R.string.ble_device_mac));
     }
 
     private void setupDrawer() {
@@ -57,8 +60,9 @@ public class RevoActivity extends BLEActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, sectionTitles));
+        adapter = new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, sectionTitles);
+        mDrawerList.setAdapter(adapter);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -98,10 +102,13 @@ public class RevoActivity extends BLEActivity {
                 fragment = new DeveloperFragment();
                 break;
             case 3:
-                boolean notChecked = !mDrawerList.isItemChecked(position);
-                RevoApplication.isDriver = notChecked;
-                mDrawerList.setItemChecked(position, notChecked);
+                RevoApplication.isDriver = !RevoApplication.isDriver;
                 currentFragment.updateMode();
+                sectionTitles[3] = "Switch to " + (RevoApplication.isDriver ? "Not Driver" : "Driver");
+                adapter.notifyDataSetChanged();
+                if ( RevoApplication.isDriver)
+                    scanBLE(getString(R.string.ble_device_mac));
+                Toast.makeText(this, getString(R.string.switch_driver_mode,  RevoApplication.isDriver ? "Driver":"Not Driver"), Toast.LENGTH_LONG).show();
                 return;
             default:
                 return;

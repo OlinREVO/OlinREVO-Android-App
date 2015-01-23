@@ -24,14 +24,6 @@ public class DeveloperFragment extends RevoFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.developer_fragment, container);
-
-//        rootView.findViewById(R.id.read_characteristic).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                DeveloperFragment.this.activity.readCharacteristic();
-//            }
-//        });
-
         return rootView;
     }
 
