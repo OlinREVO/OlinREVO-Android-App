@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
+import com.revo.display.bluetooth.ValuesCallback;
 import com.revo.display.network.RFirebase;
 import com.revo.display.network.ValueCallback;
 import com.revo.display.views.custom.Compass;
@@ -55,12 +56,17 @@ public class SpectatorFragment extends RevoFragment {
         // Get data from firebase
         ref.registerListener(SpectatorFragment.class.getSimpleName() + "direction", new String[] {"driver", "direction"}, new ValueCallback() {
             @Override
-            public void handleValue(long value) {
+            public void handleValue(Object value) {
                 Log.d("spectator handle value", "hello?");
                 if (compass != null) {
-                    compass.onValueChanged(value);
+                    compass.onValueChanged((Long) value);
                 }
             }
         });
+    }
+
+    @Override
+    public ValuesCallback getValuesCallback() {
+        return null;
     }
 }

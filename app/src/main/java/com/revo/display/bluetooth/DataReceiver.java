@@ -9,6 +9,8 @@ import android.content.Intent;
  */
 public class DataReceiver extends BroadcastReceiver {
     ValuesCallback callback;
+    
+    public DataReceiver(){}
     public DataReceiver(ValuesCallback callback) {
         this.callback = callback;
     }
@@ -16,6 +18,7 @@ public class DataReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // Implement code here to be performed when
-        callback.handleValues(intent.getByteArrayExtra("revo"));
+        if (callback != null)
+            callback.handleValues(intent.getByteArrayExtra("revo"));
     }
 }

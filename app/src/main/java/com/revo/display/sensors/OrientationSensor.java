@@ -6,6 +6,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.Sensor;
 
+import com.revo.display.network.ValueCallback;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,14 +24,14 @@ public class OrientationSensor implements SensorEventListener {
     private float[] magneticField;
     private float direction;
 
-    private ArrayList<OrientationChangeListener> listeners;
+    private ArrayList<ValueCallback> listeners;
 
     private Context context;
 
     public OrientationSensor(Context context) {
         this.context = context;
 
-        listeners = new ArrayList<OrientationChangeListener>();
+        listeners = new ArrayList<ValueCallback>();
 
         // get the sensors
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -53,17 +55,17 @@ public class OrientationSensor implements SensorEventListener {
     // setup listeners
     //
 
-    public void registerListener(OrientationChangeListener listener) {
+    public void registerListener(ValueCallback listener) {
         listeners.add(listener);
     }
 
-    public void unregisterListener(OrientationChangeListener listener) {
-        listeners.remove(listener);
+    public void unregisterListeners() {
+        listeners.clear();
     }
 
     private void notifyListeners() {
-        for (OrientationChangeListener listener : listeners) {
-            listener.onDirectionChange(direction);
+        for (ValueCallback listener : listeners) {
+            listener.handleValue(direction);
         }
     }
 
