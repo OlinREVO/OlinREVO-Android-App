@@ -27,10 +27,6 @@ public class RFirebase {
         this.firebase = new Firebase(DB_URL);
     }
 
-    public void write(String key, String value) {
-        firebase.child(key).setValue(value);
-    }
-
     public void registerListener(final String TAG, final String[] keys, final ValueCallback callback) {
         if (TAG == null || keys == null || callback == null)
             return;
@@ -41,11 +37,12 @@ public class RFirebase {
             return;
         }
 
+
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Log.i("Firebase Value Event Listener", "Received snapshot for " + Arrays.toString(keys));
-                callback.handleValue((Long) snapshot.getValue());
+                callback.handleValue(snapshot.getValue());
             }
 
             @Override

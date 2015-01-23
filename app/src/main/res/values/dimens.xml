@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="can_bus_console_margin">10dp</dimen>
+    <dimen name="can_bus_console_padding">5dp</dimen>
+    <dimen name="can_bus_title_font">14sp</dimen>
+</resources>

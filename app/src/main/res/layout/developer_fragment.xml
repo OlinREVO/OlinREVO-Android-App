@@ -12,8 +12,19 @@
         android:layout_centerInParent="true"/>
 
     <TextView
-        android:layout_width="fill_parent"
+        android:id="@+id/can_bus_title_id"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Developer Fragment"/>
+        android:textSize="@dimen/can_bus_title_font"
+        android:layout_margin="@dimen/can_bus_console_margin"
+        android:text="@string/can_bus_title"/>
 
+    <TextView
+        android:id="@+id/can_bus_console"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/can_bus_title_id"
+        android:layout_margin="@dimen/can_bus_console_margin"
+        android:padding="@dimen/can_bus_console_padding"
+        android:background="@drawable/bordered_textview"/>
 </RelativeLayout>
