@@ -25,7 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".views.fragment.DriverFragment$DataReceiver" >
+        <receiver android:name=".bluetooth.DataReceiver" >
             <intent-filter>
                 <action android:name="REVO_APP_DISPLAY" >
                 </action>
