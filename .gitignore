@@ -6,5 +6,5 @@
 /build
 .idea/
 *.iml
-*/tags
-*/TAGS
+**/tags
+**/TAGS
