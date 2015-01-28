@@ -13,7 +13,6 @@ import com.revo.display.RevoApplication;
 import com.revo.display.bluetooth.ValuesCallback;
 import com.revo.display.network.RFirebase;
 import com.revo.display.network.ValueCallback;
-import com.revo.display.sensors.OrientationChangeListener;
 import com.revo.display.sensors.OrientationSensor;
 import com.revo.display.views.custom.RBatteryMeter;
 import com.revo.display.views.custom.RSpeedometer;

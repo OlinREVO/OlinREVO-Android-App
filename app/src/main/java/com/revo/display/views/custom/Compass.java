@@ -1,19 +1,13 @@
 package com.revo.display.views.custom;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.util.Log;
-
-import com.revo.display.sensors.OrientationChangeListener;
-import com.revo.display.sensors.OrientationSensor;
 
 /**
  * Created by isaac on 10/24/14.
