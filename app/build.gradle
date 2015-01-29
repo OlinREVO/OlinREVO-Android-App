@@ -31,4 +31,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.firebase:firebase-client:1.0.18'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
+    compile 'com.google.android.gms:play-services-maps:6.5.87'
 }

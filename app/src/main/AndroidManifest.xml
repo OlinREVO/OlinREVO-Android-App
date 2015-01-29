@@ -7,6 +7,20 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
+    <!-- Google Maps Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- The following two permissions are not required to use
+         Google Maps Android API v2, but are recommended. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <!-- Google Maps OpenGL -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
+
     <application
         android:name=".RevoApplication"
         android:allowBackup="true"
@@ -30,7 +44,14 @@
                 <action android:name="REVO_APP_DISPLAY" >
                 </action>
             </intent-filter>
+            <meta-data android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
         </receiver>
+
+        <!-- API key for google maps -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDcTGOSDcM20XIp_nEa7usJiUGvzcIEVHU"/>
     </application>
 
 </manifest>
