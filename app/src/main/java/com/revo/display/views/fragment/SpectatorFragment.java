@@ -116,6 +116,9 @@ public class SpectatorFragment extends RevoFragment {
     }
 
     private void addMapPosition(double lat, double lon) {
+        Log.d(tag(), "Latitude:  " + lat);
+        Log.d(tag(), "Longitude: " + lon);
+
         if (map != null) {
             // add new line from previous coord to current coord
         }

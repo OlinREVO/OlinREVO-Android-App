@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.revo.display.network.ValueCallback;
 
@@ -25,10 +26,15 @@ public class GPSSensor implements LocationListener {
     private ArrayList<ValueCallback> listeners;
 
     public GPSSensor(Context context) {
+        Log.d("gpsSensor", "gpsSensor created");
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         listeners = new ArrayList<ValueCallback>();
+    }
+
+    public void deregisterGPS() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
     /**
@@ -38,6 +44,7 @@ public class GPSSensor implements LocationListener {
      * @return the "better" location
      */
     private Location betterLocation(Location oldLoc, Location newLoc) {
+        Log.d("gpsSensor", "Checking for better location");
         // Check for null Locations
         if (newLoc == null && oldLoc == null) return null;
         if (newLoc == null) return oldLoc;
@@ -73,6 +80,8 @@ public class GPSSensor implements LocationListener {
 
     @Override
     public void onLocationChanged(Location newLocation) {
+        Log.d("gpsSensor", "New Location!!!");
+        Log.d("gpsSensor", "lat: " + newLocation.getLatitude() + ", long: " + newLocation.getLongitude());
         currentLocation = betterLocation(currentLocation, newLocation);
         notifyListeners(currentLocation);
     }

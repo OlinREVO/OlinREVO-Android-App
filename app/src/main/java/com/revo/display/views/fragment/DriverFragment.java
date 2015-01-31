@@ -1,6 +1,7 @@
 package com.revo.display.views.fragment;
 
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +14,13 @@ import com.revo.display.RevoApplication;
 import com.revo.display.bluetooth.ValuesCallback;
 import com.revo.display.network.RFirebase;
 import com.revo.display.network.ValueCallback;
+import com.revo.display.sensors.GPSSensor;
 import com.revo.display.sensors.OrientationSensor;
 import com.revo.display.views.custom.RBatteryMeter;
 import com.revo.display.views.custom.RSpeedometer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -26,6 +31,7 @@ public class DriverFragment extends RevoFragment {
     Firebase firebaseRef = ref.getRef(new String[]{"driver"});
 
     private OrientationSensor orientationSensor;
+    private GPSSensor gpsSensor;
 
     //Views for Display
     RSpeedometer RSpeedometer;
@@ -74,6 +80,8 @@ public class DriverFragment extends RevoFragment {
             });
         }
 
+        setupGPS();
+
         if (ref != null) {
             ref.deregisterListener(DriverFragment.class.getSimpleName() + "charge", new String[]{"driver", "charge"});
             ref.deregisterListener(DriverFragment.class.getSimpleName() + "speed", new String[]{"driver", "speed"});
@@ -93,6 +101,8 @@ public class DriverFragment extends RevoFragment {
             orientationSensor.unregisterListeners();
         }
 
+        removeGPS();
+
         // Get data from firebase
         ref.registerListener(DriverFragment.class.getSimpleName() + "charge", new String[]{"driver", "charge"}, new ValueCallback() {
             @Override
@@ -111,6 +121,37 @@ public class DriverFragment extends RevoFragment {
                 }
             }
         });
+    }
+
+    private void setupGPS() {
+        if (gpsSensor == null) {
+            gpsSensor = new GPSSensor(getActivity());
+            gpsSensor.registerListener(new ValueCallback() {
+                @Override
+                public void handleValue(Object value) {
+                    Location loc = (Location) value;
+                    double latitude = loc.getLatitude();
+                    double longitude = loc.getLongitude();
+
+                    Map<String, Double> coordMap = new HashMap<String, Double>();
+                    coordMap.put("latitudue", latitude);
+                    coordMap.put("longitude", longitude);
+
+                    Log.d(tag(), "Sending new Coordinates");
+                    Log.d(tag(), "Latitude:  " + latitude);
+                    Log.d(tag(), "Longitude: " + longitude);
+
+                    firebaseRef.child("coordinates").setValue(coordMap);
+                }
+            });
+        }
+    }
+
+    private void removeGPS() {
+        if (gpsSensor != null) {
+            gpsSensor.deregisterGPS();
+            gpsSensor = null;
+        }
     }
 
     @Override
