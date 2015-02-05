@@ -55,6 +55,8 @@ public class DriverFragment extends RevoFragment {
             orientationSensor.unregisterSensors();
             orientationSensor.unregisterListeners();
         }
+
+        removeGPS();
     }
 
     @Override
