@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.maps.model.LatLng;
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
 import com.revo.display.bluetooth.ValuesCallback;
@@ -135,15 +136,12 @@ public class DriverFragment extends RevoFragment {
                     double latitude = loc.getLatitude();
                     double longitude = loc.getLongitude();
 
-                    Map<String, Double> coordMap = new HashMap<String, Double>();
-                    coordMap.put("latitudue", latitude);
-                    coordMap.put("longitude", longitude);
-
                     Log.d(tag(), "Sending new Coordinates");
                     Log.d(tag(), "Latitude:  " + latitude);
                     Log.d(tag(), "Longitude: " + longitude);
 
-                    firebaseRef.child("coordinates").setValue(coordMap);
+                    LatLng coords = new LatLng(latitude, longitude);
+                    firebaseRef.child("coordinates").setValue(coords);
                 }
             });
         }

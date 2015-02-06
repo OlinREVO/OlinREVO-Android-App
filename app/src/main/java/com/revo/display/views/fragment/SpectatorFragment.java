@@ -8,7 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
 import com.revo.display.bluetooth.ValuesCallback;
@@ -16,6 +20,7 @@ import com.revo.display.network.RFirebase;
 import com.revo.display.network.ValueCallback;
 import com.revo.display.views.custom.Compass;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,13 +30,15 @@ public class SpectatorFragment extends RevoFragment {
     private RFirebase ref = RevoApplication.app.getFireBaseHelper();
     private Compass compass;
     private MapView map;
+    private Polyline kartPathPolyLine;
+    private LatLng currCoords;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.spectator_fragment, container, false);
         compass = (Compass) rootView.findViewById(R.id.compass);
-        map = (MapView) rootView.findViewById(R.id.map);
 
+        map = (MapView) rootView.findViewById(R.id.map);
         map.onCreate(savedInstanceState);
 
         updateMode();
@@ -102,12 +109,9 @@ public class SpectatorFragment extends RevoFragment {
             public void handleValue(Object value) {
                 if (map != null) {
                     try {
-                        Map<String, Object> coords = (Map<String, Object>) value;
-                        double lat = (Double) coords.get("latitude");
-                        double lon = (Double) coords.get("longitude");
-                        addMapPosition(lat, lon);
+                        LatLng coords = (LatLng) value;
+                        if (coords != null) updateCoords(coords);
                     } catch (ClassCastException e) {
-                        Log.d(tag() + " handle coordinate", "Problem casting the Map<String, Object>");
                         e.printStackTrace();
                     }
                 }
@@ -115,12 +119,31 @@ public class SpectatorFragment extends RevoFragment {
         });
     }
 
-    private void addMapPosition(double lat, double lon) {
-        Log.d(tag(), "Latitude:  " + lat);
-        Log.d(tag(), "Longitude: " + lon);
+    private void updateCoords(LatLng coords) {
+        if (coords != null && newCoords(coords)) {
+            currCoords = coords;
+            addMapPosition(currCoords);
+        }
+    }
 
-        if (map != null) {
+    private boolean newCoords(LatLng coords) {
+        return coords != null &&
+                (currCoords == null ||
+                 currCoords.latitude != coords.latitude &&
+                 currCoords.longitude != coords.longitude);
+    }
+
+    private void addMapPosition(LatLng coords) {
+        if (kartPathPolyLine == null) {
+            GoogleMap gmap = map.getMap();
+            Log.d(tag(), coords.toString());
+            kartPathPolyLine = gmap.addPolyline(new PolylineOptions().add(coords));
+        } else {
             // add new line from previous coord to current coord
+            List<LatLng> pathPoints = kartPathPolyLine.getPoints();
+            pathPoints.add(coords);
+            Log.d(tag(), pathPoints.toString());
+            kartPathPolyLine.setPoints(pathPoints);
         }
     }
 

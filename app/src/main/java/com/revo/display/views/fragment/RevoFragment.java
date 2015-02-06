@@ -50,6 +50,7 @@ public abstract class RevoFragment extends Fragment {
         super.onPause();
         if (activity != null && receiver != null && registered) {
             activity.unregisterReceiver(receiver);
+            registered = false;
         }
     }
 
