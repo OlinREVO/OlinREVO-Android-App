@@ -1,17 +1,15 @@
 package com.revo.display.views.fragment;
 
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.revo.display.R;
 import com.revo.display.RevoApplication;
@@ -20,8 +18,7 @@ import com.revo.display.network.RFirebase;
 import com.revo.display.network.ValueCallback;
 import com.revo.display.views.custom.Compass;
 
-import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by sihrc on 9/20/14.
@@ -30,7 +27,7 @@ public class SpectatorFragment extends RevoFragment {
     private RFirebase ref = RevoApplication.app.getFireBaseHelper();
     private Compass compass;
     private MapView map;
-    private Polyline kartPathPolyLine;
+    private PolylineOptions polylineOptions;
     private LatLng currCoords;
 
     @Override
@@ -40,6 +37,8 @@ public class SpectatorFragment extends RevoFragment {
 
         map = (MapView) rootView.findViewById(R.id.map);
         map.onCreate(savedInstanceState);
+        MapsInitializer.initialize(getActivity());
+        polylineOptions = new PolylineOptions().geodesic(true);
 
         updateMode();
         return rootView;
@@ -108,43 +107,43 @@ public class SpectatorFragment extends RevoFragment {
             @Override
             public void handleValue(Object value) {
                 if (map != null) {
-                    try {
-                        LatLng coords = (LatLng) value;
-                        if (coords != null) updateCoords(coords);
-                    } catch (ClassCastException e) {
-                        e.printStackTrace();
-                    }
+                    handleCoordinateReceived(value);
                 }
             }
         });
     }
 
-    private void updateCoords(LatLng coords) {
-        if (coords != null && newCoords(coords)) {
-            currCoords = coords;
+    private void handleCoordinateReceived(Object value) {
+        try {
+            HashMap<String, Double> coordMap = (HashMap<String, Double>) value;
+            LatLng coord = new LatLng(coordMap.get("latitude"), coordMap.get("longitude"));
+            updateCoords(coord);
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCoords(LatLng coord) {
+        if (coord != null && newCoords(coord)) {
+            currCoords = coord;
             addMapPosition(currCoords);
         }
     }
 
-    private boolean newCoords(LatLng coords) {
-        return coords != null &&
+    private boolean newCoords(LatLng coord) {
+        return coord != null &&
                 (currCoords == null ||
-                 currCoords.latitude != coords.latitude &&
-                 currCoords.longitude != coords.longitude);
+                        (coord.latitude  != currCoords.latitude ||
+                         coord.longitude != currCoords.longitude));
     }
 
-    private void addMapPosition(LatLng coords) {
-        if (kartPathPolyLine == null) {
-            GoogleMap gmap = map.getMap();
-            Log.d(tag(), coords.toString());
-            kartPathPolyLine = gmap.addPolyline(new PolylineOptions().add(coords));
-        } else {
-            // add new line from previous coord to current coord
-            List<LatLng> pathPoints = kartPathPolyLine.getPoints();
-            pathPoints.add(coords);
-            Log.d(tag(), pathPoints.toString());
-            kartPathPolyLine.setPoints(pathPoints);
-        }
+    private void addMapPosition(LatLng coord) {
+        GoogleMap gmap = map.getMap();
+        gmap.clear();
+        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 2));
+
+        polylineOptions.add(coord);
+        gmap.addPolyline(polylineOptions);
     }
 
     @Override

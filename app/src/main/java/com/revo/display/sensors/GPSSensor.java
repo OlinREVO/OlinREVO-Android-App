@@ -30,11 +30,12 @@ public class GPSSensor implements LocationListener {
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         listeners = new ArrayList<ValueCallback>();
     }
 
     public void deregisterGPS() {
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.removeUpdates(this);
     }
 
     /**

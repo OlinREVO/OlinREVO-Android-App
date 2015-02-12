@@ -20,9 +20,6 @@ import com.revo.display.sensors.OrientationSensor;
 import com.revo.display.views.custom.RBatteryMeter;
 import com.revo.display.views.custom.RSpeedometer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * Created by sihrc on 9/20/14.
@@ -140,8 +137,8 @@ public class DriverFragment extends RevoFragment {
                     Log.d(tag(), "Latitude:  " + latitude);
                     Log.d(tag(), "Longitude: " + longitude);
 
-                    LatLng coords = new LatLng(latitude, longitude);
-                    firebaseRef.child("coordinates").setValue(coords);
+                    LatLng coord = new LatLng(latitude, longitude);
+                    firebaseRef.child("coordinates").setValue(coord);
                 }
             });
         }
