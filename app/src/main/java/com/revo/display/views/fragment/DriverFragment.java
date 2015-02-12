@@ -45,10 +45,7 @@ public class DriverFragment extends RevoFragment {
         ref.deregisterListener(DriverFragment.class.getSimpleName() + "charge", new String[]{"driver", "charge"});
         ref.deregisterListener(DriverFragment.class.getSimpleName() + "speed", new String[]{"driver", "speed"});
 
-        if (orientationSensor != null) {
-            orientationSensor.unregisterSensors();
-            orientationSensor.unregisterListeners();
-        }
+        removeOrientationSensor();
     }
 
     @Override
@@ -56,13 +53,7 @@ public class DriverFragment extends RevoFragment {
         return DriverFragment.class.getSimpleName();
     }
 
-    @Override
-    public void setupDriverMode() {
-        if (receiver != null && activity != null && !registered) {
-            registered = true;
-            activity.registerReceiver(receiver, new IntentFilter("REVO_APP_DISPLAY"));
-        }
-
+    private void setupOrientationSensor() {
         if (orientationSensor == null) {
             orientationSensor = new OrientationSensor(getActivity());
             orientationSensor.registerListener(new ValueCallback() {
@@ -73,6 +64,23 @@ public class DriverFragment extends RevoFragment {
                 }
             });
         }
+    }
+
+    private void removeOrientationSensor() {
+        if (orientationSensor != null) {
+            orientationSensor.unregisterSensors();
+            orientationSensor.unregisterListeners();
+        }
+    }
+
+    @Override
+    public void setupDriverMode() {
+        if (receiver != null && activity != null && !registered) {
+            registered = true;
+            activity.registerReceiver(receiver, new IntentFilter("REVO_APP_DISPLAY"));
+        }
+
+        setupOrientationSensor();
 
         if (ref != null) {
             ref.deregisterListener(DriverFragment.class.getSimpleName() + "charge", new String[]{"driver", "charge"});
@@ -88,10 +96,7 @@ public class DriverFragment extends RevoFragment {
             registered = false;
         }
 
-        if (orientationSensor != null) {
-            orientationSensor.unregisterSensors();
-            orientationSensor.unregisterListeners();
-        }
+        removeOrientationSensor();
 
         // Get data from firebase
         ref.registerListener(DriverFragment.class.getSimpleName() + "charge", new String[]{"driver", "charge"}, new ValueCallback() {
