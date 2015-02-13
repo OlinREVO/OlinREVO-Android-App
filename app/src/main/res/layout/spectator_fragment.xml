@@ -5,6 +5,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/black_overlay">
     <TextView
+        android:id="@+id/spectator_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Spectator Fragment"/>
@@ -16,8 +17,15 @@
         android:layout_centerInParent="true"/>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spectator_text">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.01"/>
 
         <com.revo.display.views.custom.Compass
             android:id="@+id/compass"
@@ -25,11 +33,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.25"/>
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.01"/>
+
         <com.revo.display.views.custom.RevoMap
             android:id="@+id/map"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.75"/>
+            android:layout_weight="0.73"/>
 
     </LinearLayout>
 
