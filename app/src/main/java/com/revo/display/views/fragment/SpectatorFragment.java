@@ -17,6 +17,7 @@ import com.revo.display.bluetooth.ValuesCallback;
 import com.revo.display.network.RFirebase;
 import com.revo.display.network.ValueCallback;
 import com.revo.display.views.custom.Compass;
+import com.revo.display.views.custom.RevoMap;
 
 import java.util.HashMap;
 
@@ -26,19 +27,16 @@ import java.util.HashMap;
 public class SpectatorFragment extends RevoFragment {
     private RFirebase ref = RevoApplication.app.getFireBaseHelper();
     private Compass compass;
-    private MapView map;
-    private PolylineOptions polylineOptions;
-    private LatLng currCoords;
+    private RevoMap map;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.spectator_fragment, container, false);
         compass = (Compass) rootView.findViewById(R.id.compass);
 
-        map = (MapView) rootView.findViewById(R.id.map);
+        map = (RevoMap) rootView.findViewById(R.id.map);
         map.onCreate(savedInstanceState);
-        MapsInitializer.initialize(getActivity());
-        polylineOptions = new PolylineOptions().geodesic(true);
 
         updateMode();
         return rootView;
@@ -107,43 +105,10 @@ public class SpectatorFragment extends RevoFragment {
             @Override
             public void handleValue(Object value) {
                 if (map != null) {
-                    handleCoordinateReceived(value);
+                    map.handleCoordinate(value);
                 }
             }
         });
-    }
-
-    private void handleCoordinateReceived(Object value) {
-        try {
-            HashMap<String, Double> coordMap = (HashMap<String, Double>) value;
-            LatLng coord = new LatLng(coordMap.get("latitude"), coordMap.get("longitude"));
-            updateCoords(coord);
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateCoords(LatLng coord) {
-        if (coord != null && newCoords(coord)) {
-            currCoords = coord;
-            addMapPosition(currCoords);
-        }
-    }
-
-    private boolean newCoords(LatLng coord) {
-        return coord != null &&
-                (currCoords == null ||
-                        (coord.latitude  != currCoords.latitude ||
-                         coord.longitude != currCoords.longitude));
-    }
-
-    private void addMapPosition(LatLng coord) {
-        GoogleMap gmap = map.getMap();
-        gmap.clear();
-        gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(coord, 2));
-
-        polylineOptions.add(coord);
-        gmap.addPolyline(polylineOptions);
     }
 
     @Override
