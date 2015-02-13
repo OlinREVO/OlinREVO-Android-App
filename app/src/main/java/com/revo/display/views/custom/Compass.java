@@ -5,9 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.util.Log;
+
+import com.revo.display.R;
 
 /**
  * Created by isaac on 10/24/14.
@@ -15,9 +18,10 @@ import android.util.Log;
 public class Compass extends View implements ValueChangeListener {
     private static final String TAG = Compass.class.getSimpleName();
     private static final long DIRECTION_INCREMENT = 5;
-    private static final float TEXT_SIZE = 75f;
+    private static final float DEFAULT_TEXT_SIZE = 75f;
+    private static final float TEXT_RADIUS_COEFF = 0.3f;
 
-    private long direction;
+    private int direction;
     private Point center;
     private double radius;
     private double innerRadius;
@@ -25,6 +29,7 @@ public class Compass extends View implements ValueChangeListener {
     private Paint bgPaint;
     private Paint fgPaint;
     private Paint textPaint;
+    private final Rect textBounds = new Rect();
 
     public Compass(Context context) {
         super(context);
@@ -45,20 +50,15 @@ public class Compass extends View implements ValueChangeListener {
         // TODO: add visual attributes
     }
 
-    public void setDirection(long direction) {
+    public void setDirection(int direction) {
         this.direction = direction;
     }
 
     public void onValueChanged(float newDirection) {
-        // round direction to multiples of DIRECTION_INCREMENT
-        long dir = round((long) newDirection, DIRECTION_INCREMENT);
-        Log.d("Compass", "" + dir);
+        int dir = formatDirection((int) newDirection);
         setDirection(dir);
         this.invalidate();
-    }
-
-    private long round(long value, long increment) {
-       return value - (value % increment);
+        Log.d("Compass", "" + dir);
     }
 
     // 
@@ -69,32 +69,36 @@ public class Compass extends View implements ValueChangeListener {
     public void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         // TODO: set compass dimensions
         int dim = Math.min(width, height);
-        radius = (double) dim / 4;
+        radius = (double) dim / 2;
         innerRadius = (0.9 * radius);
         center.x = width / 2;
         center.y = height / 2;
+        setTextSize(textPaint, radius);
     }
 
     public void initDrawingTools() {
-        bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bgPaint.setStyle(Paint.Style.FILL);
-        bgPaint.setColor(Color.WHITE);
-        bgPaint.setStrokeWidth(35f);
-        bgPaint.setAntiAlias(true);
-
         fgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         fgPaint.setStyle(Paint.Style.FILL);
-        fgPaint.setColor(Color.BLACK);
+        fgPaint.setColor(Color.WHITE);
         fgPaint.setStrokeWidth(35f);
-        fgPaint.setTextSize(TEXT_SIZE);
         fgPaint.setAntiAlias(true);
+
+        bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bgPaint.setStyle(Paint.Style.FILL);
+        bgPaint.setColor(Color.BLACK);
+        bgPaint.setStrokeWidth(35f);
+        bgPaint.setAntiAlias(true);
 
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setStrokeWidth(35f);
         textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(TEXT_SIZE);
-        textPaint.setTextAlign(Paint.Align.CENTER);
+        textPaint.setTextSize(DEFAULT_TEXT_SIZE);
+    }
+
+    private void setTextSize(Paint paint, double radius) {
+        float textSize = (float) (TEXT_RADIUS_COEFF * radius);
+        paint.setTextSize(textSize);
     }
 
     private void drawBackGround(Canvas canvas) {
@@ -102,25 +106,25 @@ public class Compass extends View implements ValueChangeListener {
     }
 
     private void drawCompassBorder(Canvas canvas) {
-        canvas.drawCircle(center.x, center.y, (float) radius, bgPaint);
-        canvas.drawCircle(center.x, center.y, (float) innerRadius, fgPaint);
+        canvas.drawCircle(center.x, center.y, (float) radius, fgPaint);
+        canvas.drawCircle(center.x, center.y, (float) innerRadius, bgPaint);
     }
 
     private void drawDirectionText(Canvas canvas) {
         // get the direction out of 360
-        double posDirection = direction < 0 ? 360 + direction : direction;
-        String directionText = String.format("%.0f°", posDirection);
-        canvas.drawText(directionText, (float) center.x, (float) center.y, textPaint);
+        double posDirection = getPositiveDirection(direction);
+        String directionText = String.format("%.0f", posDirection);
+        drawTextCentered(canvas, directionText, center.x, center.y, textPaint);
     }
 
     private void drawCardinalLabels(Canvas canvas) {
         String dirs[] = {"N", "E", "S", "W"};
+        int degreeDiff = -90;
         for (String dir : dirs) {
-            canvas.drawText(dir,
-                    center.x,
-                    (float) (center.y - innerRadius - textPaint.ascent()),
-                    textPaint);
-            canvas.rotate(-90, center.x, center.y);
+            float x = center.x;
+            float y = (float) (center.y - innerRadius - textPaint.ascent());
+            drawTextCentered(canvas, dir, x, y, textPaint);
+            canvas.rotate(degreeDiff, center.x, center.y);
         }
     }
 
@@ -137,5 +141,25 @@ public class Compass extends View implements ValueChangeListener {
         drawCardinalLabels(canvas);
 
         canvas.restore();
+    }
+
+    private int formatDirection(int direction) {
+        direction = (int) getPositiveDirection(direction);
+        direction = direction % 360;
+        direction = (int) round(direction, DIRECTION_INCREMENT);
+        return direction;
+    }
+
+    private double round(double value, double increment) {
+        return value - (value % increment);
+    }
+
+    private double getPositiveDirection(double dir) {
+        return dir < 0 ? 360 + dir : dir;
+    }
+
+    private void drawTextCentered(Canvas canvas, String text, float x, float y, Paint paint) {
+        paint.getTextBounds(text, 0, text.length(), textBounds);
+        canvas.drawText(text, x - textBounds.exactCenterX(), y - textBounds.exactCenterY(), paint);
     }
 }
