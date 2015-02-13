@@ -55,10 +55,15 @@ public class Compass extends View implements ValueChangeListener {
     }
 
     public void onValueChanged(float newDirection) {
-        int dir = formatDirection((int) newDirection);
-        setDirection(dir);
+        newDirection = newDirection % 360;
+        int roundedDirection = (int) roundDown(newDirection, DIRECTION_INCREMENT);
+        setDirection((int) roundedDirection);
         this.invalidate();
-        Log.d("Compass", "" + dir);
+        Log.d("Compass", "" + roundedDirection);
+    }
+
+    private double roundDown(double val, double increment) {
+        return val - (val % increment);
     }
 
     // 
@@ -112,14 +117,13 @@ public class Compass extends View implements ValueChangeListener {
 
     private void drawDirectionText(Canvas canvas) {
         // get the direction out of 360
-        double posDirection = getPositiveDirection(direction);
-        String directionText = String.format("%.0f", posDirection);
+        String directionText = String.format("%d", direction);
         drawTextCentered(canvas, directionText, center.x, center.y, textPaint);
     }
 
     private void drawCardinalLabels(Canvas canvas) {
         String dirs[] = {"N", "E", "S", "W"};
-        int degreeDiff = -90;
+        int degreeDiff = 90;
         for (String dir : dirs) {
             float x = center.x;
             float y = (float) (center.y - innerRadius - textPaint.ascent());
@@ -141,21 +145,6 @@ public class Compass extends View implements ValueChangeListener {
         drawCardinalLabels(canvas);
 
         canvas.restore();
-    }
-
-    private int formatDirection(int direction) {
-        direction = (int) getPositiveDirection(direction);
-        direction = direction % 360;
-        direction = (int) round(direction, DIRECTION_INCREMENT);
-        return direction;
-    }
-
-    private double round(double value, double increment) {
-        return value - (value % increment);
-    }
-
-    private double getPositiveDirection(double dir) {
-        return dir < 0 ? 360 + dir : dir;
     }
 
     private void drawTextCentered(Canvas canvas, String text, float x, float y, Paint paint) {

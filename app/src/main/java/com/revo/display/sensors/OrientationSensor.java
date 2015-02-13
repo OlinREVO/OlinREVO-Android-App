@@ -1,15 +1,14 @@
 package com.revo.display.sensors;
 
 import android.content.Context;
+import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.hardware.Sensor;
 
 import com.revo.display.network.ValueCallback;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by isaac on 10/24/14.
@@ -86,7 +85,9 @@ public class OrientationSensor implements SensorEventListener {
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                direction = (float) (-orientation[0] * (360 / (2 * Math.PI)));
+                float directionInRadians = orientation[0];
+                float directionInDegrees = (float) Math.toDegrees(directionInRadians);
+                direction = (directionInDegrees + 450) % 360;
             }
         }
         notifyListeners();
