@@ -85,9 +85,9 @@ public class OrientationSensor implements SensorEventListener {
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                float directionInRadians = orientation[0];
+                float directionInRadians = -orientation[0];
                 float directionInDegrees = (float) Math.toDegrees(directionInRadians);
-                direction = (directionInDegrees + 450) % 360;
+                direction = (directionInDegrees + 270) % 360;
             }
         }
         notifyListeners();
