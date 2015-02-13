@@ -19,6 +19,7 @@ import java.util.HashMap;
  */
 public class RevoMap extends MapView {
     private static float DEFAULT_CAMERA_ZOOM = 14.0f;
+    private static float MIN_CAMERA_ZOOM = 12.0f;
 
     private PolylineOptions polylineOptions;
     private LatLng currCoords;
@@ -52,7 +53,7 @@ public class RevoMap extends MapView {
 
                     @Override
                     public void onCameraChange(CameraPosition cameraPosition) {
-                        cameraZoom = cameraPosition.zoom;
+                        cameraZoom = Math.max(MIN_CAMERA_ZOOM, cameraPosition.zoom);
                     }
 
                 });
