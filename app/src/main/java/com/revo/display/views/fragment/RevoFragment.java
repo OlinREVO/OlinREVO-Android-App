@@ -54,6 +54,36 @@ public abstract class RevoFragment extends Fragment {
         }
     }
 
+    /**
+     * Converts the array of bytes (which represent a string of hex values)
+     * received from bluetooth into an array of integer values.
+     * There are two bytes per integer value
+     * @param bytes that represent an ascii string of hex
+     * @return an array of the bytes integer values
+     */
+    public int[] bytesToValues(byte[] bytes) {
+        // create the hex string sent over bluetooth
+        String hexString = new String(bytes);
+
+        // split the hex string into the individual values
+        int numVals = bytes.length / 2;
+        String[] byteStrings = new String[numVals];
+        for (int i = 0; i < numVals; ++i) {
+            int strStart = i * 2;
+            int strEnd = strStart + 2;
+            byteStrings[i] = hexString.substring(strStart, strEnd);
+        }
+
+        // convert the string values into integers
+        int[] intVals = new int[numVals];
+        for (int i = 0; i < numVals; ++i) {
+            int hexBase = 16;
+            intVals[i] = Integer.parseInt(byteStrings[i], hexBase);
+        }
+
+        return intVals;
+    }
+
     public abstract String tag();
     public abstract void setupDriverMode();
     public abstract void setupNotDriverMode();

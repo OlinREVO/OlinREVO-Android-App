@@ -121,7 +121,10 @@ public class BLEHandler extends BluetoothGattCallback {
     private void broadcastUpdate(BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent("REVO_APP_DISPLAY");
         byte[] values = characteristic.getValue();
-        intent.putExtra("revo", String.valueOf(values));
+        Log.d(TAG, "UUID: " + characteristic.getUuid());
+        //intent.putExtra("revo", String.valueOf(values));
+        intent.putExtra("revo", values);
+
         activity.sendBroadcast(intent);
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.client.Firebase;
 import com.google.android.gms.maps.model.LatLng;
@@ -19,6 +20,11 @@ import com.revo.display.sensors.GPSSensor;
 import com.revo.display.sensors.OrientationSensor;
 import com.revo.display.views.custom.RBatteryMeter;
 import com.revo.display.views.custom.RSpeedometer;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -34,11 +40,13 @@ public class DriverFragment extends RevoFragment {
     //Views for Display
     RSpeedometer RSpeedometer;
     RBatteryMeter RBatteryMeter;
+    TextView bleText;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.driver_fragment, container, false);
         RSpeedometer = (RSpeedometer) rootView.findViewById(R.id.speedometer);
         RBatteryMeter = (RBatteryMeter) rootView.findViewById((R.id.batterymeter));
+        bleText = (TextView) rootView.findViewById(R.id.ble_text);
 
         return rootView;
     }
@@ -158,17 +166,24 @@ public class DriverFragment extends RevoFragment {
         return new ValuesCallback() {
             @Override
             public void handleValues(byte[] values) {
+
+                int[] vals = bytesToValues(values);
+                Log.d("driver", new String(values));
+
+                bleText.setText(new String(values));
                 // Get data from bluetooth chip & send to firebase
                 if (RSpeedometer != null && RBatteryMeter != null) {
-                    RSpeedometer.setCurrentSpeed((float) values[0]);
-                    RBatteryMeter.setCurrentCharge((float) values[1]);
+                    RSpeedometer.onValueChanged((float) vals[0]);
+                    RBatteryMeter.onValueChanged((float) vals[1]);
                 }
 
-                // This should happen in bluetooth callback
-                if (firebaseRef != null) {
-                    firebaseRef.child("charge").setValue(values[0]);
-                    firebaseRef.child("speed").setValue(values[1]);
-                }
+
+
+//                // This should happen in bluetooth callback
+//                if (firebaseRef != null) {
+//                    firebaseRef.child("charge").setValue(values[0]);
+//                    firebaseRef.child("speed").setValue(values[1]);
+//                }
             }
         };
     }

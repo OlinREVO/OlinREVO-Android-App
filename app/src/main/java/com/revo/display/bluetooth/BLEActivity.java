@@ -34,6 +34,7 @@ public class BLEActivity extends Activity {
     private BluetoothAdapter.LeScanCallback mBLECallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
+            Log.d(TAG, "bluetooth device: " + bluetoothDevice + ", " + i + ", " + bytes);
             if (device == null && bluetoothDevice.getAddress().equals(deviceName)) {
                 Log.d(TAG, "Setting device");
                 device = bluetoothDevice;
@@ -61,6 +62,7 @@ public class BLEActivity extends Activity {
     }
 
     private void startScan(final boolean enable) {
+        Log.d(TAG, "starting scan");
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
@@ -75,6 +77,7 @@ public class BLEActivity extends Activity {
 
             mBLEAdapter.startLeScan(mBLECallback);
         } else {
+            Log.d(TAG, "BLE not enabled");
             mBLEAdapter.stopLeScan(mBLECallback);
             enableBLE();
         }

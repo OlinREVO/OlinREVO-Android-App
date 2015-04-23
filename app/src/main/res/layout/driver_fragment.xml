@@ -18,18 +18,30 @@
         android:id="@+id/speedometer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/driver_center"
         android:layout_alignParentLeft="true"
-        custom:maxSpeed="100"/>
+        custom:maxSpeed="100"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/driver_center" />
     <!--custom:onColor="@color/speedometer_on" />-->
 
     <com.revo.display.views.custom.RBatteryMeter
         android:id="@+id/batterymeter"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/driver_center"
-        custom:maxCharge="100"/>
+        custom:maxCharge="100"
+        android:layout_alignBottom="@+id/driver_center"
+        android:layout_toEndOf="@+id/speedometer" />
+
+    <TextView
+        android:id="@+id/ble_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="100dp"
+        android:textAlignment="center"
+        android:textColor="#fffffbfb"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
     <!--custom:onColor="@color/batterymeter_on" />-->
 </RelativeLayout>
