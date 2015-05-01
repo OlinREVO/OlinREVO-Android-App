@@ -117,7 +117,7 @@ public class DeveloperFragment extends RevoFragment {
         return new ValuesCallback() {
             @Override
             public void handleValues(byte[] values) {
-                String valueStr = Arrays.toString(values);
+                String valueStr = new String(values);
                 buffer.append(valueStr);
                 buffer.append('\n');
                 if (console != null) {

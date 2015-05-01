@@ -23,8 +23,11 @@ import com.revo.display.views.custom.RSpeedometer;
 
 import org.w3c.dom.Text;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -33,6 +36,12 @@ import java.util.Arrays;
 public class DriverFragment extends RevoFragment {
     RFirebase ref = RevoApplication.app.getFireBaseHelper();
     Firebase firebaseRef = ref.getRef(new String[]{"driver"});
+
+    private float direction;
+    private float speed;
+    private float batteryLevel;
+    private double latitude;
+    private double longitude;
 
     private OrientationSensor orientationSensor;
     private GPSSensor gpsSensor;
@@ -72,8 +81,10 @@ public class DriverFragment extends RevoFragment {
             orientationSensor.registerListener(new ValueCallback() {
                 @Override
                 public void handleValue(Object value) {
-                    Log.d("New Direction", ((Long) value).toString());
-                    firebaseRef.child("direction").setValue((Long) value);
+                    direction = (Float) value;
+                    Log.d("New Direction", "" + direction);
+                    firebaseRef.child("direction").setValue(direction);
+                    logCSV();
                 }
             });
         }
@@ -126,8 +137,9 @@ public class DriverFragment extends RevoFragment {
         ref.registerListener(DriverFragment.class.getSimpleName() + "speed", new String[]{"driver", "speed"}, new ValueCallback() {
             @Override
             public void handleValue(Object value) {
+                speed = (Float) value;
                 if (RSpeedometer != null) {
-                    RSpeedometer.onValueChanged((Long) value);
+                    RSpeedometer.onValueChanged(speed);
                 }
             }
         });
@@ -140,8 +152,8 @@ public class DriverFragment extends RevoFragment {
                 @Override
                 public void handleValue(Object value) {
                     Location loc = (Location) value;
-                    double latitude = loc.getLatitude();
-                    double longitude = loc.getLongitude();
+                    latitude = loc.getLatitude();
+                    longitude = loc.getLongitude();
 
                     Log.d(tag(), "Sending new Coordinates");
                     Log.d(tag(), "Latitude:  " + latitude);
@@ -168,6 +180,12 @@ public class DriverFragment extends RevoFragment {
             public void handleValues(byte[] values) {
 
                 int[] vals = bytesToValues(values);
+
+                int nodeId = vals[0];
+                switch (nodeId) {
+                    case NODE_BLE:
+                        // do stuff
+                }
                 Log.d("driver", new String(values));
 
                 bleText.setText(new String(values));
